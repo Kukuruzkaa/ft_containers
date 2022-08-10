@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 20:41:48 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/08 22:29:15 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/10 21:13:48 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,31 @@ namespace ft {
         {
             return this->c.back();
         }
+        
         const_reference top() const
         {
             return this->c.back();
         }
+        
         void    push(const value_type & value)
         {
             this->c.push_back(value);
         }
+        
         bool    empty() const
         {
             return this->c.empty();
         }
+        
         size_type size() const
         {
             return this->c.size();
         }
+        
         void pop()
         {
             this->c.pop_back();
         }
-
 
 
         stack & operator=(const stack & src)
