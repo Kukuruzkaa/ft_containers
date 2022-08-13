@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 20:41:48 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/10 21:13:48 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/13 18:17:39 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,32 +68,32 @@ namespace ft {
             return *this;
         }
         
-        friend bool operator==( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator==(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c == rhs.c;
         }
         
-        friend bool operator!=( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator!=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c != rhs.c;
         }
 
-        friend bool operator<( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator<(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c < rhs.c;
         }
 
-        friend bool operator<=( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator<=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c <= rhs.c;
         }
 
-        friend bool operator>( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator>(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c > rhs.c;
         }
 
-        friend bool operator>=( const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
+        friend bool operator>=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
         {
             return lhs.c >= rhs.c;
         }
