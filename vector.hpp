@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/15 22:03:26 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:45:55 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,13 @@ namespace ft {
             
             void                    resize(size_type n, value_type val = value_type())
             {
+                if (n > max_size())
+                    throw::std::length_error("Length error");
                 if (n < _size)
-                    _size = n;
+                {
+                    for (size_t i = n; i > _size; --i)
+                        pop_back();
+                }
                 if (n > _capacity)
                     reserve(n);
                 for (size_t i = _size; i < n; ++i)
@@ -195,9 +200,17 @@ namespace ft {
             }
             
             iterator                insert(iterator pos, const T& value);
+            
             void                    insert(iterator pos, size_type count, const T& value)
             {
-                
+                if (_size + count > _capacity)
+                    reserve(_size + count);
+                if (pos == end())
+                {
+                    for (size_t i == _size; i < count; ++i)
+                        push_back(value);
+                    return ;
+                }    
             }
 
             // template< class InputIt >
