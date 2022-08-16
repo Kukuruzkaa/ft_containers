@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/15 23:45:55 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/16 23:17:06 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,14 +203,15 @@ namespace ft {
             
             void                    insert(iterator pos, size_type count, const T& value)
             {
+                pointer end = (pos + count);
+                
                 if (_size + count > _capacity)
                     reserve(_size + count);
-                if (pos == end())
-                {
-                    for (size_t i == _size; i < count; ++i)
-                        push_back(value);
-                    return ;
-                }    
+                for (pointer begin = pos; end > begin; --end)
+                    _alloc.construct(&_arr[end], _arr[*(end - count)]);
+                for (pointer it = pos; it < pos + count; ++it)
+                    _arr[*it] = value;
+                _size = _size + count;  
             }
 
             // template< class InputIt >
