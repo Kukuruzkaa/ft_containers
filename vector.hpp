@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/16 23:17:06 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/17 21:55:29 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <memory>
 #include <iterator>
 #include <vector>
+
 
 namespace ft {
     
@@ -203,14 +204,12 @@ namespace ft {
             
             void                    insert(iterator pos, size_type count, const T& value)
             {
-                pointer end = (pos + count);
-                
                 if (_size + count > _capacity)
                     reserve(_size + count);
-                for (pointer begin = pos; end > begin; --end)
-                    _alloc.construct(&_arr[end], _arr[*(end - count)]);
+                for (pointer it = end() + count - 1; it >= pos + count; --it)
+                    _alloc.construct(it, *(it - count));
                 for (pointer it = pos; it < pos + count; ++it)
-                    _arr[*it] = value;
+                    *it = value;   
                 _size = _size + count;  
             }
 
@@ -253,6 +252,14 @@ namespace ft {
 
     template <class T, class Alloc> 
     void swap(std::vector<T,Alloc>& lhs, std::vector<T,Alloc>& rhs) {lhs.swap(rhs);}
+}
+
+
+void    print(ft::vector<int>& vec)
+{
+    for (size_t i = 0; i < vec.capacity(); ++i)
+        std::cout << vec.begin()[i] << ' ';
+    std::cout << std::endl;
 }
 
 #endif
