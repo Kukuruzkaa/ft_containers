@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/20 17:04:54 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/20 22:51:53 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ int main    (void)
     it = v2.begin();
     v2.insert(it + 2, 3, 7);
     print(v2);
+    it = v2.begin();
+    v2.insert(it + 3, 8);
+    print(v2);
+    v2.erase(v2.begin(), v2.begin() + 2);
+    print(v2);
+    
     // for (ft::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
     //     std::cout << *it << std::endl;
 

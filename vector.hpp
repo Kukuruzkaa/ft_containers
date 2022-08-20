@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/20 18:11:09 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/20 23:22:03 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ namespace ft {
             // typedef             std::reverse_iterator<const_iterator>   const_reverse_ieterator; // TO DO
 
             //**********MEMBER FUNCTIONS**********  
-            /*explicit vector(const allocator_type & alloc = allocator_type()) 
+            explicit vector(const allocator_type & alloc = allocator_type()) 
                 : _arr(NULL), _size(0), _capacity(0), _alloc(alloc) 
             {
                 std::cout << "Default vector constructor" << std::endl;
-            }*/
+            }
             
             explicit vector (size_type n, const value_type & val = value_type(), const allocator_type & alloc = allocator_type()) 
                 : _size(n), _capacity(n), _alloc(alloc)
@@ -201,18 +201,24 @@ namespace ft {
                  _alloc.destroy(&_arr[i]);
             }
             
-            iterator                insert(iterator pos, const T& value);
+            iterator                insert(iterator pos, const T& value)
+            {
+                difference_type index = pos - begin();
+
+                insert(pos, 1, value);
+                return iterator(&_arr[index]);     
+            }
             
             void                    insert(iterator pos, size_type count, const T& value)
             {
-                difference_type to_shift = pos - begin();
+                difference_type index = pos - begin();
                  
                 if (_size + count > _capacity)
                     reserve(_size + count);
-                size_t shift_right = _size - to_shift;
-                for (pointer it = end() + count - 1; it >= end() + count - 1 - shift_right; --it) 
+                size_t toMove = _size - index;
+                for (pointer it = end() + count - 1; it >= end() + count - 1 - toMove; --it) 
                     _alloc.construct(it, *(it - count));
-                pos = _arr + to_shift;
+                pos = _arr + index;
                 for (pointer it = pos; it < pos + count; ++it)
                     *it = value;   
                 _size = _size + count;
@@ -220,8 +226,40 @@ namespace ft {
 
             // template< class InputIt >
             //     void                insert(iterator pos, InputIt first, InputIt last);
+            
             iterator                erase(iterator pos);
-            iterator                erase(iterator first, iterator last);
+            
+            iterator                erase(iterator first, iterator last)
+            {
+                size_t toRemove;
+                size_t pos = first - begin();
+
+                if (last > end())
+                {
+                    last = end();
+                    toRemove = end() - first;
+                }
+                toRemove = last - first;
+                pointer tmp = last;
+                while (first != end() && first < tmp)
+                {
+                    *first = *last;
+                    last++;
+                    first++;
+                }
+                // for (pointer it = tmp; it < end(); ++it)
+                // {
+                //     *it = *it + 1;
+                //     // _alloc.destroy(&(*it + toRemove));
+                // }
+                std::cout << "to remove: " << toRemove << std::endl;
+                _size = _size - toRemove;
+                // resize(toRemove);
+                std::cout << "size: " << _size << std::endl;
+                first = begin() + pos;
+                return (first);
+                
+            }
             
             void                    push_back(const T& value)
             {
@@ -233,8 +271,8 @@ namespace ft {
             
             void                    pop_back()
             {
-                 _alloc.destroy(&_arr[_size]);
-                 _size--;
+                _alloc.destroy(&_arr[_size]);
+                 _size--;  
             }
             
             void                    swap(vector& rhs);
