@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/17 21:55:29 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/20 18:11:09 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ namespace ft {
             // typedef             std::reverse_iterator<const_iterator>   const_reverse_ieterator; // TO DO
 
             //**********MEMBER FUNCTIONS**********  
-            explicit vector(const allocator_type & alloc = allocator_type()) 
+            /*explicit vector(const allocator_type & alloc = allocator_type()) 
                 : _arr(NULL), _size(0), _capacity(0), _alloc(alloc) 
             {
                 std::cout << "Default vector constructor" << std::endl;
-            }
+            }*/
             
             explicit vector (size_type n, const value_type & val = value_type(), const allocator_type & alloc = allocator_type()) 
                 : _size(n), _capacity(n), _alloc(alloc)
@@ -168,7 +168,8 @@ namespace ft {
                 new_arr = _alloc.allocate(new_cap);
                 if (!new_arr)
                     throw::std::bad_alloc();
-                for (size_t i = 0; i < _size; ++i)
+                size_t i;
+                for (i = 0; i < _size; ++i)
                     _alloc.construct(&new_arr[i], _arr[i]);
                 clear();
                 _alloc.deallocate(_arr, _capacity);
@@ -204,13 +205,17 @@ namespace ft {
             
             void                    insert(iterator pos, size_type count, const T& value)
             {
+                difference_type to_shift = pos - begin();
+                 
                 if (_size + count > _capacity)
                     reserve(_size + count);
-                for (pointer it = end() + count - 1; it >= pos + count; --it)
+                size_t shift_right = _size - to_shift;
+                for (pointer it = end() + count - 1; it >= end() + count - 1 - shift_right; --it) 
                     _alloc.construct(it, *(it - count));
+                pos = _arr + to_shift;
                 for (pointer it = pos; it < pos + count; ++it)
                     *it = value;   
-                _size = _size + count;  
+                _size = _size + count;
             }
 
             // template< class InputIt >

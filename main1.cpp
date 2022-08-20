@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/16 23:07:16 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/20 17:04:54 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,29 @@
 # define NAMESPACE ft
 #endif
 
+
+
 int main    (void)
 {
 
-    NAMESPACE::vector<int>            v1; //empty
+    // NAMESPACE::vector<int>            v1; //empty
     NAMESPACE::vector<int>            v2(5,5);
-    NAMESPACE::vector<int>            v3(v2);
+    // NAMESPACE::vector<int>            v3(v2);
 
-    std::cout << "v1.empty(): " << std::boolalpha << v1.empty() << std::endl;
+    // std::cout << "v1.empty(): " << std::boolalpha << v1.empty() << std::endl;
     
-    for (ft::vector<int>::iterator it = v2.begin(); it != v2.end(); ++it)
-        std::cout << *it << std::endl;
+    // std::cout << "v1 :" << std::endl;
+    // print(v1);
+    std::cout << "v2 :" << std::endl;
+    print(v2);
+    // std::cout << "v3 :" << std::endl;
+    // print(v3);
     
     ft::vector<int>::iterator it;
 
     it = v2.begin();
     v2.insert(it + 2, 3, 7);
+    print(v2);
     // for (ft::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
     //     std::cout << *it << std::endl;
 
