@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/20 23:22:03 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/25 00:59:56 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <memory>
 #include <iterator>
 #include <vector>
+#include "type_traits.hpp"
+#include "iterator_traits.hpp"
 
 
 namespace ft {
@@ -140,8 +142,8 @@ namespace ft {
             // **********Iterators**********
             iterator                begin() {return _arr;}
             iterator                end() {return _arr + _size;} 
-            // const_iterator          begin() const;
-            // const_iterator          end() const;
+            // const_iterator          begin() const {return _arr;}
+            // const_iterator          end() const {return _arr + _size;} 
             // reverse_iterator        rbegin();
             // const_reverse_iterator  rbegin() const;
             // reverse_iterator        rend();
@@ -227,38 +229,26 @@ namespace ft {
             // template< class InputIt >
             //     void                insert(iterator pos, InputIt first, InputIt last);
             
-            iterator                erase(iterator pos);
+            iterator                erase(iterator pos)
+            {
+                return erase(pos, pos + 1);
+            }
             
             iterator                erase(iterator first, iterator last)
             {
-                size_t toRemove;
-                size_t pos = first - begin();
-
-                if (last > end())
-                {
-                    last = end();
-                    toRemove = end() - first;
-                }
-                toRemove = last - first;
-                pointer tmp = last;
-                while (first != end() && first < tmp)
+        
+                difference_type toRemove = last - first;
+            
+                while (first != end())
                 {
                     *first = *last;
-                    last++;
                     first++;
+                    last++;
                 }
-                // for (pointer it = tmp; it < end(); ++it)
-                // {
-                //     *it = *it + 1;
-                //     // _alloc.destroy(&(*it + toRemove));
-                // }
-                std::cout << "to remove: " << toRemove << std::endl;
+                for (pointer it = end(); it > end() - toRemove; --it)
+                    _alloc.destroy(it);
                 _size = _size - toRemove;
-                // resize(toRemove);
-                std::cout << "size: " << _size << std::endl;
-                first = begin() + pos;
-                return (first);
-                
+                return first;
             }
             
             void                    push_back(const T& value)
@@ -300,7 +290,7 @@ namespace ft {
 
 void    print(ft::vector<int>& vec)
 {
-    for (size_t i = 0; i < vec.capacity(); ++i)
+    for (size_t i = 0; i < vec.size(); ++i)
         std::cout << vec.begin()[i] << ' ';
     std::cout << std::endl;
 }

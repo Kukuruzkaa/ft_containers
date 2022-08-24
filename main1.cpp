@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/20 22:51:53 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/25 01:00:04 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ int main    (void)
     it = v2.begin();
     v2.insert(it + 3, 8);
     print(v2);
-    v2.erase(v2.begin(), v2.begin() + 2);
+    v2.erase(v2.begin() + 1);
     print(v2);
+
     
     // for (ft::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
     //     std::cout << *it << std::endl;
@@ -90,3 +91,14 @@ int main    (void)
     // for (std::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
     //     std::cout << *it << std::endl;
 }
+
+
+// int main()
+// {
+//   std::cout << std::boolalpha;
+//   std::cout << "is_integral:" << std::endl;
+//   std::cout << "char: " << ft::is_integral<char>::value << std::endl;
+//   std::cout << "int: " << ft::is_integral<int>::value << std::endl;
+//   std::cout << "float: " << ft::is_integral<float>::value << std::endl;
+//   return 0;
+// }
