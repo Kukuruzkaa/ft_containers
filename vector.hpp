@@ -6,18 +6,17 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/25 19:04:52 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:59:57 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_CLASS_HPP
 # define VECTOR_CLASS_HPP
-#include <iostream>
 #include <memory>
-#include <iterator>
-#include <vector>
 #include "type_traits.hpp"
 #include "iterator_traits.hpp"
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
 
 
 namespace ft {
@@ -29,8 +28,8 @@ namespace ft {
 			//**********MEMMBER TYPES**********
 			typedef T                                                   value_type;
 			typedef Allocator                                           allocator_type;
-			typedef             size_t                                  size_type;
-			typedef             ptrdiff_t                               difference_type;
+			typedef             size_t                  				size_type;
+			typedef             std::ptrdiff_t                          difference_type;
 			
 			typedef typename    allocator_type::reference               reference;
 			typedef typename    allocator_type::const_reference         const_reference;
@@ -38,9 +37,9 @@ namespace ft {
 			typedef typename    allocator_type::const_pointer           const_pointer;
 			
 			typedef pointer                                             iterator;
-			typedef const pointer                                       const_iterator;
-			// typedef             std::reverse_iterator<iterator>         reverse_iterator; // TO DO
-			// typedef             std::reverse_iterator<const_iterator>   const_reverse_ieterator; // TO DO
+			typedef const_pointer                                       const_iterator;
+			typedef             std::reverse_iterator<iterator>         reverse_iterator; 
+			typedef             std::reverse_iterator<const_iterator>   const_reverse_iterator; 
 
 			//**********MEMBER FUNCTIONS**********  
 			explicit vector(const allocator_type & alloc = allocator_type()) 
@@ -89,7 +88,7 @@ namespace ft {
 			
 			vector & operator=(const vector & rhs) 
 			{
-				_size = 0;
+				clear();
 				this->insert(this->begin(), rhs.begin(), rhs.end());
 				return *this;
 			}
@@ -148,15 +147,15 @@ namespace ft {
 			iterator                end() {return _arr + _size;} 
 			const_iterator          begin() const {return _arr;}
 			const_iterator          end() const {return _arr + _size;} 
-			// reverse_iterator        rbegin();
-			// const_reverse_iterator  rbegin() const;
-			// reverse_iterator        rend();
-			// const_reverse_iterator  rend() const;
+			reverse_iterator        rbegin() {return _arr + _size - 1;}
+			const_reverse_iterator  rbegin() const {return _arr + _size - 1;}
+			reverse_iterator        rend() {return _arr - 1;}
+			const_reverse_iterator  rend() const {return _arr - 1;}
 
 			// Capacity
 			bool                    empty() const
 			{
-				if(_size != 0)
+				if (_size != 0)
 					return false;
 				return true;
 			}
@@ -240,7 +239,14 @@ namespace ft {
 			void                insert(iterator pos, InputIt first, InputIt last, typename ft::enable_if<!is_integral<InputIt>::value, bool>::type = 0)
 			{
 				difference_type i = pos - begin();
-				difference_type range = last - first;
+				
+				InputIt	tmp = first;
+				size_t	range = 0;
+				while (tmp != last)
+				{
+					tmp++;
+					range++;
+				}
 				 
 				if (_size + range > _capacity)
 					reserve(_size + range);
@@ -277,7 +283,9 @@ namespace ft {
 			
 			void                    push_back(const T& value)
 			{
-				if (_capacity == _size)
+				if (_capacity == 0)
+					reserve (1);
+				else if (_capacity == _size)
 					reserve (2 * _size);
 				_alloc.construct(&_arr[_size], value);
 				_size++;    
@@ -285,20 +293,55 @@ namespace ft {
 			
 			void                    pop_back()
 			{
+				if (_size == 0)
+					return ;
+				_size--;
 				_alloc.destroy(&_arr[_size]);
-				_size--;  
 			}
 			
-			void                    swap(vector& rhs);
+			void                    swap(vector& rhs)
+			{
+				T *       arr = rhs._arr;;
+				size_t    size = rhs._size;
+				size_t    capacity = rhs._capacity;
+
+				rhs._arr = _arr;
+				rhs._size = _size;
+				rhs._capacity = _capacity;
+				
+				_arr = arr;
+				_size = size;
+				_capacity = capacity;
+			}
 
 			//**********NON-MEMBER FUNCTIONS**********
-			friend bool operator==(const vector& lhs, const vector& rhs) {return lhs == rhs;}
-			friend bool operator!=(const vector& lhs, const vector& rhs) {return lhs != rhs;}
-			friend bool operator<(const vector& lhs, const vector& rhs) {return lhs < rhs;}
-			friend bool operator<=(const vector& lhs, const vector& rhs) {return lhs <= rhs;}
-			friend bool operator>(const vector& lhs, const vector& rhs) {return lhs > rhs;}
-			friend bool operator>=(const vector& lhs, const vector& rhs) {return lhs >= rhs;}
-
+			friend bool operator==(const vector& lhs, const vector& rhs)
+			{
+				if (lhs._size != rhs._size)
+					return false;
+				return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+			}
+			friend bool operator!=(const vector& lhs, const vector& rhs)
+			{
+				return (!(lhs == rhs));
+			}
+			friend bool operator<(const vector& lhs, const vector& rhs)
+			{
+				return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+			}
+			friend bool operator<=(const vector& lhs, const vector& rhs) 
+			{
+				return (lhs < rhs || lhs == rhs);
+			}
+			friend bool operator>(const vector& lhs, const vector& rhs)
+			{
+				return (!(lhs <= rhs));
+			}
+			friend bool operator>=(const vector& lhs, const vector& rhs)
+			{
+				return (lhs > rhs || lhs == rhs);
+				// return (!(lhs < rhs));
+			}
 
 		private:
 			T *             _arr;
@@ -308,7 +351,7 @@ namespace ft {
 	};
 
 	template <class T, class Alloc> 
-	void swap(std::vector<T,Alloc>& lhs, std::vector<T,Alloc>& rhs) {lhs.swap(rhs);}
+	void swap(ft::vector<T,Alloc>& lhs, ft::vector<T,Alloc>& rhs) {lhs.swap(rhs);}
 }
 
 

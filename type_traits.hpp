@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 20:49:19 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/24 23:13:48 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:12:39 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ namespace ft {
   template <class T, T v>
   struct integral_constant 
   {
-    static constexpr T value = v;
+    static const T value = v;
     typedef T value_type;
     typedef integral_constant<T,v> type;
-    constexpr operator T() {return v;}
+    operator T() {return v;}
   };
   
   template <class T> 
