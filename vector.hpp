@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/27 19:20:10 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/27 19:37:23 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,11 +229,6 @@ namespace ft {
 			{
 				difference_type i = pos - begin();
 				
-				// if (pos == end())
-				// {
-				// 	for (size_t i = 0; i < count; i++)
-				// 		push_back(value);
-				// }
 				if (_size + count > _capacity)
 					reserve(_size + count);
 				size_t nbElem = _size - i;
@@ -256,7 +251,7 @@ namespace ft {
 				{
 					tmp++;
 					range++;
-				}	 
+				} 
 				if (_size + range > _capacity)
 					reserve(_size + range);
 				size_t nbElem = _size - i;
@@ -359,13 +354,4 @@ namespace ft {
 	template <class T, class Alloc> 
 	void swap(ft::vector<T,Alloc>& lhs, ft::vector<T,Alloc>& rhs) {lhs.swap(rhs);}
 }
-
-
-// void    print(ft::vector<int>& vec)
-// {
-// 	for (size_t i = 0; i < vec.size(); ++i)
-// 		std::cout << vec.begin()[i] << ' ';
-// 	std::cout << std::endl;
-// }
-
 #endif
