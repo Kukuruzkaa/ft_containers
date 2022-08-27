@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/27 19:12:20 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/27 19:20:10 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,10 @@ namespace ft {
 			iterator                end() {return _arr + _size;} 
 			const_iterator          begin() const {return _arr;}
 			const_iterator          end() const {return _arr + _size;} 
-			reverse_iterator        rbegin() {return reverse_iterator(_arr + (_size - 1));}
-			const_reverse_iterator  rbegin() const {return const_reverse_iterator(_arr + (_size - 1));}
-			reverse_iterator        rend() {return reverse_iterator(_arr - 1);}
-			const_reverse_iterator  rend() const {return const_reverse_iterator(_arr - 1);}
+			reverse_iterator        rbegin() {return reverse_iterator(_arr +_size);}
+			const_reverse_iterator  rbegin() const {return const_reverse_iterator(_arr +_size);}
+			reverse_iterator        rend() {return reverse_iterator(_arr);}
+			const_reverse_iterator  rend() const {return const_reverse_iterator(_arr);}
 
 			// Capacity
 			bool                    empty() const
