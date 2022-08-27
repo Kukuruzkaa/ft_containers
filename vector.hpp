@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/27 19:37:23 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/27 23:28:39 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "iterator_traits.hpp"
 #include "equal.hpp"
 #include "lexicographical_compare.hpp"
+#include <iostream>
 
 
 namespace ft {
@@ -82,14 +83,14 @@ namespace ft {
 			~vector()
 			{
 				// std::cout << "Destructor" << std::endl;
-				if (!this->empty())
+				if (!empty())
 				{
 					for (size_t i = 0; i < _size; ++i)
 						_alloc.destroy(&_arr[i]);
 					clear();
-					if (_capacity)
-						_alloc.deallocate(_arr, _capacity);
 				}
+				if (_capacity)
+					_alloc.deallocate(_arr, _capacity);
 			}
 			
 			vector & operator=(const vector & rhs) 
@@ -174,7 +175,7 @@ namespace ft {
 				if (new_cap < _capacity)
 					return ;
 				if (new_cap > max_size())
-					throw::std::length_error("Length error");
+					throw::std::length_error("vector::reserve");
 				// ft::vector<T>	tmp(*this);
 				T * new_arr;
 				new_arr = _alloc.allocate(new_cap);
@@ -186,9 +187,10 @@ namespace ft {
 				size_t	size_tmp = _size;
 				clear();
 				_size = size_tmp;
-				_alloc.deallocate(_arr, _capacity);
+				if (_capacity)
+					_alloc.deallocate(_arr, _capacity);
 				// *this = tmp;
-				_arr = new_arr;
+				 _arr = new_arr;
 				_capacity = new_cap;
 			}
 			
@@ -213,7 +215,7 @@ namespace ft {
 			void                    clear()
 			{
 				for (size_t i = 0; i < _size; ++i)
-				 _alloc.destroy(&_arr[i]);
+					_alloc.destroy(&_arr[i]);
 				_size = 0;
 			}
 			
@@ -230,9 +232,9 @@ namespace ft {
 				difference_type i = pos - begin();
 				
 				if (_size + count > _capacity)
-					reserve(_size + count);
+					reserve(std::max((_size + count), (_size * 2)));
 				size_t nbElem = _size - i;
-				for (pointer it = end() + count - 1, ite = end() + count - 1 - nbElem; it > ite; --it)  
+				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it)  
 					_alloc.construct(it, *(it - count));
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it)
@@ -253,9 +255,9 @@ namespace ft {
 					range++;
 				} 
 				if (_size + range > _capacity)
-					reserve(_size + range);
+					reserve(std::max((_size + range), (_size * 2)));
 				size_t nbElem = _size - i;
-				for (pointer it = end() + range - 1, ite = end() + range - 1 - nbElem; it > ite; --it) 
+				for (pointer it = end() + range - 1; it > end() + range - 1 - nbElem; --it) 
 					_alloc.construct(it, *(it - range));
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + range; ++it, ++first)
