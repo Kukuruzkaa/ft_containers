@@ -6,13 +6,14 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/25 22:59:57 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/27 19:12:20 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_CLASS_HPP
 # define VECTOR_CLASS_HPP
 #include <memory>
+#include <cstddef>
 #include "type_traits.hpp"
 #include "iterator_traits.hpp"
 #include "equal.hpp"
@@ -26,10 +27,10 @@ namespace ft {
 	{
 		public:
 			//**********MEMMBER TYPES**********
-			typedef T                                                   value_type;
-			typedef Allocator                                           allocator_type;
-			typedef             size_t                  				size_type;
-			typedef             std::ptrdiff_t                          difference_type;
+			typedef T                                                   		value_type;
+			typedef Allocator                                           		allocator_type;
+			typedef             	size_t                  					size_type;
+			typedef            		ptrdiff_t                          		difference_type;
 			
 			typedef typename    allocator_type::reference               reference;
 			typedef typename    allocator_type::const_reference         const_reference;
@@ -81,9 +82,14 @@ namespace ft {
 			~vector()
 			{
 				// std::cout << "Destructor" << std::endl;
-				for (size_t i = 0; i < _size; ++i)
-					_alloc.destroy(&_arr[i]);
-				_alloc.deallocate(_arr, _capacity);
+				if (!this->empty())
+				{
+					for (size_t i = 0; i < _size; ++i)
+						_alloc.destroy(&_arr[i]);
+					clear();
+					if (_capacity)
+						_alloc.deallocate(_arr, _capacity);
+				}
 			}
 			
 			vector & operator=(const vector & rhs) 
@@ -147,10 +153,10 @@ namespace ft {
 			iterator                end() {return _arr + _size;} 
 			const_iterator          begin() const {return _arr;}
 			const_iterator          end() const {return _arr + _size;} 
-			reverse_iterator        rbegin() {return _arr + _size - 1;}
-			const_reverse_iterator  rbegin() const {return _arr + _size - 1;}
-			reverse_iterator        rend() {return _arr - 1;}
-			const_reverse_iterator  rend() const {return _arr - 1;}
+			reverse_iterator        rbegin() {return reverse_iterator(_arr + (_size - 1));}
+			const_reverse_iterator  rbegin() const {return const_reverse_iterator(_arr + (_size - 1));}
+			reverse_iterator        rend() {return reverse_iterator(_arr - 1);}
+			const_reverse_iterator  rend() const {return const_reverse_iterator(_arr - 1);}
 
 			// Capacity
 			bool                    empty() const
@@ -181,7 +187,6 @@ namespace ft {
 				clear();
 				_size = size_tmp;
 				_alloc.deallocate(_arr, _capacity);
-				_arr = _alloc.allocate(new_cap);
 				// *this = tmp;
 				_arr = new_arr;
 				_capacity = new_cap;
@@ -195,7 +200,7 @@ namespace ft {
 					throw::std::length_error("Length error");
 				if (n < _size)
 				{
-					for (size_t i = n; i > _size; --i)
+					for (size_t i = _size; i > n; --i)
 						pop_back();
 				}
 				if (n > _capacity)
@@ -215,7 +220,7 @@ namespace ft {
 			iterator                insert(iterator pos, const T& value)
 			{
 				difference_type it = pos - begin();
-
+				
 				insert(pos, 1, value);
 				return iterator(&_arr[it]);     
 			}
@@ -224,6 +229,11 @@ namespace ft {
 			{
 				difference_type i = pos - begin();
 				
+				// if (pos == end())
+				// {
+				// 	for (size_t i = 0; i < count; i++)
+				// 		push_back(value);
+				// }
 				if (_size + count > _capacity)
 					reserve(_size + count);
 				size_t nbElem = _size - i;
@@ -246,8 +256,7 @@ namespace ft {
 				{
 					tmp++;
 					range++;
-				}
-				 
+				}	 
 				if (_size + range > _capacity)
 					reserve(_size + range);
 				size_t nbElem = _size - i;
@@ -266,16 +275,15 @@ namespace ft {
 			
 			iterator                erase(iterator first, iterator last)
 			{
-		
 				difference_type toRemove = last - first;
-
-				while (first != end() && last != end())
+				iterator tmp = first;
+				while (tmp != end() && last != end())
 				{
-					*first = *last;
-					first++;
+					*tmp = *last;
+					tmp++;
 					last++;
 				}
-				for (pointer it = end(); it > end() - toRemove; --it)
+				for (pointer it = end() - 1; it > end() - toRemove; --it)
 					_alloc.destroy(it);
 				_size = _size - toRemove;
 				return first;
@@ -293,10 +301,8 @@ namespace ft {
 			
 			void                    pop_back()
 			{
-				if (_size == 0)
-					return ;
-				_size--;
-				_alloc.destroy(&_arr[_size]);
+				if (_size)
+					erase(end() - 1);
 			}
 			
 			void                    swap(vector& rhs)

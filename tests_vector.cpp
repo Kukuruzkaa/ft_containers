@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/25 22:56:12 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/27 18:41:14 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void    print(NAMESPACE::vector<int>& vec)
 
 void    print_data  (std::vector<int> tmp)
 {
-    std::cout   << "size     = "
-                << tmp.size()
-                << std::endl
-                << "capacity = "
-                << tmp.capacity()
-                << std::endl;
+	std::cout   << "size     = "
+				<< tmp.size()
+				<< std::endl
+				<< "capacity = "
+				<< tmp.capacity()
+				<< std::endl;
 }
 
 bool mycomp (char c1, char c2)
@@ -40,28 +40,31 @@ bool mycomp (char c1, char c2)
 
 int main () 
 {
-    // ft::vector<int> t;
-    // t.pop_back();
-    // std::cout   << "t1\n";
+	// ft::vector<int> t;
+	// t.pop_back();
+	// std::cout   << "t1\n";
 
-    std::vector<int>    t;
+	ft::vector<int>    t;
 
-    std::cout   << "t.size()   = " << t.size() << std::endl
-                << "t.capacity = " << t.capacity() << std::endl;
-    
-    t.push_back(1);
-    std::cout   << "t.size()   = " << t.size() << std::endl
-                << "t.capacity = " << t.capacity() << std::endl;
+	// t.push_back(1);
+	// t.push_back(2);
+	// t.push_back(3);
+	// t.push_back(4);
+	// t.push_back(5);
+	// t.push_back(6);
+	// t.push_back(7);
+	// t.push_back(8);
 
-    t.push_back(1);
-    std::cout   << "t.size()   = " << t.size() << std::endl
-                << "t.capacity = " << t.capacity() << std::endl;
-                t.push_back(1);
-    std::cout   << "t.size()   = " << t.size() << std::endl
-                << "t.capacity = " << t.capacity() << std::endl;
-                t.push_back(1);
-    std::cout   << "t.size()   = " << t.size() << std::endl
-                << "t.capacity = " << t.capacity() << std::endl;
+	for (int i = 0; i < 8; i++) {
+		t.insert(t.end(), i);
+	}
+
+	print(t);
+
+	ft::vector<int>::iterator it = t.begin() + 2;
+	t.erase(it, it + 2);
+	
+	print(t);
 //   char foo[]="Apple";
 //   char bar[]="apartment";
 
@@ -86,18 +89,18 @@ int main ()
 //     NAMESPACE::vector<int>            v2(5,5);
 //     NAMESPACE::vector<int>            v3(3,3);
 //     NAMESPACE::vector<int>            v4, v5;
-    
-    
+	
+	
 
 //     // std::cout << "v1.empty(): " << std::boolalpha << v1.empty() << std::endl;
-    
+	
 //     // std::cout << "v1 :" << std::endl;
 //     // print(v1);
 //     std::cout << "v2 :" << std::endl;
 //     print(v2);
 //     // std::cout << "v3 :" << std::endl;
 //     // print(v3);
-    
+	
    
    
 //     v2.insert(v2.begin() + 2, 3, 7);
@@ -107,7 +110,7 @@ int main ()
 
 //     v2.insert(v2.begin() + 4, v3.begin(), v3.end());
 //     print(v2);
-    
+	
 //     v2.erase(v2.begin() + 1, v2.begin() + 4);
 //     print(v2);
 
@@ -137,13 +140,13 @@ int main ()
 //     std::cout << "capacity : " << v7.capacity() << std::endl;
 //      print(v7);
 
-     
+	 
 //     std::vector<int>    t,
 //                         s;
 
 //     for (int i = 0; i < 10; i++)
 //         t.push_back(i);
-    
+	
 //     std::cout   << t.capacity()
 //                 << std::endl;
 //     t.clear();
@@ -158,54 +161,54 @@ int main ()
 //     std::cout << "after swap :" << std::endl;
 //     print(v7);
 //     print(v5);
-    
-    
-    // s = t;
-    // s.assign(t.begin(), t.end());
-    // s.pop_back();
-    // t.assign(s.begin(), s.end());
-    // // s = t;
-    // std::cout   << t.size()
-    //             << std::endl
-    //             << s.size()
-    //             << std::endl
-    //             << t.capacity()
-    //             << std::endl;
+	
+	
+	// s = t;
+	// s.assign(t.begin(), t.end());
+	// s.pop_back();
+	// t.assign(s.begin(), s.end());
+	// // s = t;
+	// std::cout   << t.size()
+	//             << std::endl
+	//             << s.size()
+	//             << std::endl
+	//             << t.capacity()
+	//             << std::endl;
 
-    // for (ft::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
-    //     std::cout << *it << std::endl;
+	// for (ft::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
+	//     std::cout << *it << std::endl;
 
-    // v1.reserve(50);
+	// v1.reserve(50);
 
-    // for (ft::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
-    //     std::cout << *it << std::endl;
+	// for (ft::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
+	//     std::cout << *it << std::endl;
 
-    // std::cout << "v1.empty(): " << std::boolalpha << v1.empty() << std::endl;
-    // std::cout << "v1 size(): " << v1.size() << std::endl;
+	// std::cout << "v1.empty(): " << std::boolalpha << v1.empty() << std::endl;
+	// std::cout << "v1 size(): " << v1.size() << std::endl;
 
-    // v1.resize(12, 15);
-    // for (ft::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
-    //     std::cout << *it << std::endl;
-    // std::cout << "v1 size(): " << v1.size() << std::endl;   
-    // v1 = v2;
+	// v1.resize(12, 15);
+	// for (ft::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
+	//     std::cout << *it << std::endl;
+	// std::cout << "v1 size(): " << v1.size() << std::endl;   
+	// v1 = v2;
 
-    // std::vector<int>            v1; //empty
-    // std::vector<int>            v2(3,5);
-    // std::vector<int>            v3(v2);
+	// std::vector<int>            v1; //empty
+	// std::vector<int>            v2(3,5);
+	// std::vector<int>            v3(v2);
 
-    // for (std::vector<int>::iterator it = v2.begin(); it != v2.end(); ++it)
-    //     std::cout << *it << std::endl;
+	// for (std::vector<int>::iterator it = v2.begin(); it != v2.end(); ++it)
+	//     std::cout << *it << std::endl;
 
-    // for (std::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
-    //     std::cout << *it << std::endl;
+	// for (std::vector<int>::iterator it = v3.begin(); it != v3.end(); ++it)
+	//     std::cout << *it << std::endl;
 
-    // // v2.assign (7,100); 
-    // // for (std::vector<int>::iterator it = v2.begin(); it != v2.end(); ++it)
-    // //     std::cout << *it << std::endl;
+	// // v2.assign (7,100); 
+	// // for (std::vector<int>::iterator it = v2.begin(); it != v2.end(); ++it)
+	// //     std::cout << *it << std::endl;
 
-    // v1.assign (7,100); 
-    // for (std::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
-    //     std::cout << *it << std::endl;
+	// v1.assign (7,100); 
+	// for (std::vector<int>::iterator it = v1.begin(); it != v1.end(); ++it)
+	//     std::cout << *it << std::endl;
 // }
 
 
