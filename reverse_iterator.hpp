@@ -6,18 +6,17 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 17:17:23 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/27 23:37:44 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/08/28 11:56:41 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
-#include "iterator_traits.hpp"
 
 namespace ft {
     template <class Iterator>
     class reverse_iterator : public
-        iterator<typename iterator_traits<Iterator>::iterator_category,
+        std::iterator<typename iterator_traits<Iterator>::iterator_category,
                     typename iterator_traits<Iterator>::value_type,
                     typename iterator_traits<Iterator>::difference_type,
                     typename iterator_traits<Iterator>::pointer,
@@ -47,7 +46,7 @@ namespace ft {
     reverse_iterator& operator++()
     {
         --current;
-        return *this
+        return *this;
     }
     reverse_iterator operator++(int)
     {
@@ -58,7 +57,7 @@ namespace ft {
     reverse_iterator& operator--()
     {
         ++current;
-        return *this
+        return *this;
     }
     reverse_iterator operator--(int)
     {
@@ -112,7 +111,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current != y.current
+            return x.current != y.current;
         }
             
     template <class Iterator>
@@ -155,3 +154,4 @@ namespace ft {
            return reverse_iterator<Iterator> (x.current - n);
         }
 }
+#endif
