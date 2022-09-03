@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/30 16:09:15 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/03 21:54:28 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,8 @@ namespace ft {
 			~vector()
 			{
 				// std::cout << "Destructor" << std::endl;
-				// if (!empty())
-				// {/
-					// for (size_t i = 0; i < _size; ++i)
-					// 	_alloc.destroy(&_arr[i]);
+					
 				clear();
-				// }
-				// if (_capacity)
 				_alloc.deallocate(_arr, _capacity);
 			}
 			
@@ -182,17 +177,13 @@ namespace ft {
 				for (size_t i = 0; i < _size; ++i)
 				{
 					_alloc.construct(new_arr + i, _arr[i]);
+					_alloc.destroy(&_arr[i]);
 				}
 
-				for (size_type i = 0; i < _size; i++)
-					_alloc.destroy(&_arr[i]);
-					
-				// size_t	size_tmp = _size;
-				// clear();
-				// _size = size_tmp;
-				// if (_capacity)
+				// for (size_type i = 0; i < _size; i++)
+				// 	_alloc.destroy(&_arr[i]);
 				_alloc.deallocate(_arr, _capacity);
-				 _arr = new_arr;
+				_arr = new_arr;
 				_capacity = new_cap;
 			
 				// if (new_cap > max_size()) throw std::length_error("vector::reserve");
@@ -264,8 +255,13 @@ namespace ft {
 				// 	_alloc.construct(cur, value);
 				// _size += count;
 				size_t nbElem = _size - i;
-				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it)  
-					_alloc.construct(it, *(it - count));
+				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it) 
+				{
+					if (it >= end())
+						_alloc.construct(it, *(it - count));
+					else
+						*it = *(it - count);
+				}
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it)
 				{
@@ -276,6 +272,22 @@ namespace ft {
 				}
 				_size = _size + count;
 			}
+
+			// pos: 0
+			// count: 1
+			// value: N
+			// i: 0
+			// nbElem: 2
+
+			// it: 1
+			// ite: begin
+
+			// 1 2 end
+			// 1 1 2
+
+			
+			// N 1 2		
+			
 
 			template< class InputIt >
 			void                insert(iterator pos, InputIt first, InputIt last, typename ft::enable_if<!is_integral<InputIt>::value, bool>::type = 0)
