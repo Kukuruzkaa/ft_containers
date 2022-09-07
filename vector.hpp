@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/03 21:54:28 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/07 19:41:48 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ namespace ft {
 				: _alloc(alloc), _arr(_alloc.allocate(n)), _size(n), _capacity(n)
 			{
 				// std::cout << "Parameters constructor" << std::endl;
-				if (!_arr)
-					throw::std::bad_alloc();
+//				if (!_arr)
+//					throw::std::bad_alloc();
 				for (size_t i = 0; i < _size; ++i)
 					_alloc.construct(&_arr[i], val);
 			}
@@ -172,37 +172,15 @@ namespace ft {
 				
 				pointer new_arr = _alloc.allocate(new_cap);
 				if (!new_arr)
-					throw::std::bad_alloc();
-					
+					throw::std::bad_alloc();		
 				for (size_t i = 0; i < _size; ++i)
 				{
 					_alloc.construct(new_arr + i, _arr[i]);
 					_alloc.destroy(&_arr[i]);
 				}
-
-				// for (size_type i = 0; i < _size; i++)
-				// 	_alloc.destroy(&_arr[i]);
 				_alloc.deallocate(_arr, _capacity);
 				_arr = new_arr;
 				_capacity = new_cap;
-			
-				// if (new_cap > max_size()) throw std::length_error("vector::reserve");
-				// if (new_cap <= capacity()) return ;
-
-				// size_type old_size = size();
-				// iterator new_arr = _alloc.allocate(new_cap);
-
-				// for (size_type i = 0; i < old_size; i++)
-				// 	_alloc.construct(new_arr + i, _arr[i]);
-
-				// for (size_type i = 0; i < old_size; i++)
-				// 	_alloc.destroy(_arr + i);
-
-				// _alloc.deallocate(_arr, capacity());
-				// _arr = new_arr;
-				// _size = old_size;
-				// _capacity = new_cap;
-			
 			}
 			
 			size_type               capacity() const {return _capacity;}
@@ -220,8 +198,13 @@ namespace ft {
 			// **********Modifiers**********
 			void                    clear()
 			{
-				for (size_t i = 0; i < _size; ++i)
-					_alloc.destroy(_arr + i);
+				// if (empty())
+				// for (size_t i = 0; i < _size; ++i)
+				for (pointer it = _arr, ite = _arr + _size;
+					 it < ite;
+					 it++)
+					_alloc.destroy(it);
+					// _alloc.destroy(_arr + i);
 				_size = 0;
 			}
 			
@@ -237,23 +220,8 @@ namespace ft {
 			{
 				difference_type i = pos - begin();
 				
-				if (size() + count > capacity()) {
-					// difference_type diff = pos - begin();
-					// 
+				if (size() + count > capacity()) 
 					reserve(std::max<size_type>(count + size(), 2 * size()));
-					// pos = begin() + diff;
-				}
-				
-				// if (count > 0) {	
-				// 	iterator new_pos = end() + count - 1;
-				// 	for (iterator it = end() - 1; it >= pos; it--, new_pos--) {
-				// 		_alloc.construct(new_pos, *it);
-				// 		_alloc.destroy(it);
-				// 	}
-				// }
-				// for (iterator cur = pos; cur < pos + count; cur++)
-				// 	_alloc.construct(cur, value);
-				// _size += count;
 				size_t nbElem = _size - i;
 				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it) 
 				{
@@ -273,42 +241,34 @@ namespace ft {
 				_size = _size + count;
 			}
 
-			// pos: 0
-			// count: 1
-			// value: N
-			// i: 0
-			// nbElem: 2
-
-			// it: 1
-			// ite: begin
-
-			// 1 2 end
-			// 1 1 2
-
-			
-			// N 1 2		
-			
-
 			template< class InputIt >
 			void                insert(iterator pos, InputIt first, InputIt last, typename ft::enable_if<!is_integral<InputIt>::value, bool>::type = 0)
 			{
 				difference_type i = pos - begin();
 				
+				if (&(*first) > &(*last))
+					throw::std::length_error("vector::reserve");
 				InputIt	tmp = first;
 				size_t	range = 0;
 				while (tmp != last)
 				{
 					tmp++;
 					range++;
-				} 
+				}
 				if (_size + range > _capacity)
 					reserve(std::max<size_type>((_size + range), _size * 2));
 				size_t nbElem = _size - i;
-				for (pointer it = end() + range - 1; it > end() + range - 1 - nbElem; --it) 
-					_alloc.construct(it, *(it - range));
+				for (pointer it = end() + range - 1; it > end() + range - 1 - nbElem; --it)
+				{
+					if (it >= end())
+						_alloc.construct(it, *(it - range));
+					else
+						*it = *(it - range);
+				}
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + range; ++it, ++first)
 				{
+				
 					if (it >= _arr + _size)
 						_alloc.construct(it, *first);
 					else
@@ -321,7 +281,7 @@ namespace ft {
 			{
 				return erase(pos, pos + 1);
 			}
-			
+				
 			iterator                erase(iterator first, iterator last)
 			{
 				difference_type toRemove = last - first;
@@ -332,7 +292,7 @@ namespace ft {
 					tmp++;
 					last++;
 				}
-				for (pointer it = end() - 1; it > end() - toRemove; --it)
+				for (pointer it = end() - 1; it >= end() - toRemove; --it)
 					_alloc.destroy(it);
 				_size = _size - toRemove;
 				return first;
@@ -340,16 +300,12 @@ namespace ft {
 			
 			void                    push_back(const T& value)
 			{
-				// if (_capacity < _size + 1)
-				// 	reserve(std::max<size_type>(1, _size * 2));
-				// _alloc.construct(&_arr[_size], value);
-				// _size++;
 				insert(end(), value);
 			}
 			
 			void                    pop_back()
 			{
-				if (_size)
+				// if (_size)
 					erase(end() - 1);
 			}
 			
