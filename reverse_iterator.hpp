@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 17:17:23 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/08/28 11:56:41 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:36:25 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@ namespace ft {
         typedef typename iterator_traits<Iterator>::pointer             pointer;
     
            
-    reverse_iterator();
-    explicit reverse_iterator(Iterator x);
-    template <class U> reverse_iterator(const reverse_iterator<U>& u);
+    reverse_iterator()
+        :current()
+    {}
+    explicit reverse_iterator(Iterator x)
+        :current(x)
+    {}
+    template <class U> reverse_iterator(const reverse_iterator<U>& u)
+        :current(u.base())
+    {}
     
     Iterator base() const {return current;} // explicit
     
@@ -68,7 +74,7 @@ namespace ft {
     
     reverse_iterator operator+ (difference_type n) const
     {
-        reverse_iterator(current - n);
+       return reverse_iterator(current - n);
     }
     reverse_iterator& operator+=(difference_type n)
     {
@@ -90,12 +96,23 @@ namespace ft {
     }
     };
 
+    template
+    <
+        typename Iterator1,
+        typename Iterator2
+    >
+    bool    operator==  (Iterator1 const & lhs,
+                            Iterator2 const & rhs)
+        {
+            return (lhs.base() == rhs.base());
+        }
+    
     template <class Iterator>
         bool operator==(
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current == y.current;
+            return x.base() == y.base();
         }
             
     template <class Iterator>
@@ -103,7 +120,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current > y.current;
+            return x.base() > y.base();
         }
             
     template <class Iterator>
@@ -111,7 +128,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current != y.current;
+            return x.base() != y.base();
         }
             
     template <class Iterator>
@@ -119,7 +136,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current < y.current;
+            return x.base() < y.base();
         }
 
     template <class Iterator>
@@ -127,7 +144,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current <= y.current;
+            return x.base() <= y.base();
         }
             
     template <class Iterator>
@@ -135,7 +152,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return x.current >= y.current;
+            return x.base() >= y.base();
         }
             
     template <class Iterator>
@@ -143,7 +160,7 @@ namespace ft {
             const reverse_iterator<Iterator>& x,
             const reverse_iterator<Iterator>& y)
         {
-            return y.current - x.current;
+            return y.base() - x.base();
         }
             
     template <class Iterator>
@@ -151,7 +168,7 @@ namespace ft {
             typename reverse_iterator<Iterator>::difference_type n,
             const reverse_iterator<Iterator>& x)
         {
-           return reverse_iterator<Iterator> (x.current - n);
+           return reverse_iterator<Iterator> (x.base() - n);
         }
 }
 #endif

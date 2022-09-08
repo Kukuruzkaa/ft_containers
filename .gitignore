@@ -1,0 +1,6 @@
+a.out
+*.o
+*.d
+42TESTERS-CONTAINERS
+container_tester
+containers_test

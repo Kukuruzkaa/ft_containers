@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/07 19:41:48 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:27:38 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ namespace ft {
 			
 			typedef pointer                                             iterator;
 			typedef const_pointer                                       const_iterator;
-			typedef             std::reverse_iterator<iterator>         reverse_iterator; 
-			typedef             std::reverse_iterator<const_iterator>   const_reverse_iterator; 
+			typedef             ft::reverse_iterator<iterator>         	reverse_iterator; 
+			typedef             ft::reverse_iterator<const_iterator>   	const_reverse_iterator; 
 
 			//**********MEMBER FUNCTIONS**********  
 			explicit vector(const allocator_type & alloc = allocator_type()) 
@@ -147,8 +147,8 @@ namespace ft {
 			// **********Iterators**********
 			iterator                begin() {return iterator(_arr);}
 			iterator                end() {return iterator(_arr + _size);} 
-			const_iterator          begin() const {return iterator(_arr);}
-			const_iterator          end() const {return iterator(_arr + _size);} 
+			const_iterator          begin() const {return const_iterator(_arr);}
+			const_iterator          end() const {return const_iterator(_arr + _size);} 
 			reverse_iterator        rbegin() {return reverse_iterator(_arr +_size);}
 			const_reverse_iterator  rbegin() const {return const_reverse_iterator(_arr +_size);}
 			reverse_iterator        rend() {return reverse_iterator(_arr);}
