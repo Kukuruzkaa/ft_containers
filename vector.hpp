@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/09 21:55:00 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:37:19 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,11 +219,7 @@ namespace ft {
 			void                    insert(iterator pos, size_type count, const T& value)
 			{
 				difference_type i = pos - begin();
-				
-				if (size() + count > capacity()) 
-					reserve(std::max<size_type>(count + size(), 2 * size()));
-				size_t nbElem = _size - i;
-				_insert(count, nbElem);
+				_insert(count, i);
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it)
 				{
@@ -239,7 +235,6 @@ namespace ft {
 			void                insert(iterator pos, InputIt first, InputIt last, typename ft::enable_if<!is_integral<InputIt>::value, bool>::type = 0)
 			{
 				difference_type i = pos - begin();
-				
 				if (&(*first) > &(*last))
 					throw::std::length_error("vector::reserve");
 				InputIt	tmp = first;
@@ -249,10 +244,7 @@ namespace ft {
 					tmp++;
 					count++;
 				}
-				if (_size + count > _capacity)
-					reserve(std::max<size_type>((_size + count), _size * 2));
-				size_t nbElem = _size - i;
-				_insert(count, nbElem);
+				_insert(count, i);
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it, ++first)
 				{
@@ -347,8 +339,19 @@ namespace ft {
 			size_t         	 	_size;
 			size_t          	_capacity;
 
-			void				_insert(size_t count, size_t nbElem)
+			template<typename _T>
+			const _T	& max(_T const & x, _T const & y)
 			{
+				if (x < y)
+					return y;
+				return x;
+			}
+
+			void				_insert(size_t count, ptrdiff_t i)
+			{
+				if (size() + count > capacity()) 
+					reserve(max<size_type>(count + size(), 2 * size()));
+				size_t nbElem = _size - i;
 				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it)
 				{
 					if (it >= end())
