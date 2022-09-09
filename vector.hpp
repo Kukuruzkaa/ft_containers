@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/09 22:37:19 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:43:34 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ namespace ft {
 				: _alloc(alloc), _arr(_alloc.allocate(n)), _size(n), _capacity(n)
 			{
 				// std::cout << "Parameters constructor" << std::endl;
-//				if (!_arr)
-//					throw::std::bad_alloc();
 				for (size_t i = 0; i < _size; ++i)
 					_alloc.construct(&_arr[i], val);
 			}
@@ -198,13 +196,8 @@ namespace ft {
 			// **********Modifiers**********
 			void                    clear()
 			{
-				// if (empty())
-				// for (size_t i = 0; i < _size; ++i)
-				for (pointer it = _arr, ite = _arr + _size;
-					 it < ite;
-					 it++)
+				for (pointer it = _arr, ite = _arr + _size; it < ite; ++it)
 					_alloc.destroy(it);
-					// _alloc.destroy(_arr + i);
 				_size = 0;
 			}
 			
@@ -285,7 +278,6 @@ namespace ft {
 			
 			void                    pop_back()
 			{
-				// if (_size)
 					erase(end() - 1);
 			}
 			
