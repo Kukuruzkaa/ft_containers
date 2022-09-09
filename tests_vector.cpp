@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/07 19:10:05 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:26:17 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,42 @@
 # define NAME "ft"
 #endif
 
+#include <typeinfo>
+
+#define SIZE 20
+
 using namespace NAMESPACE;
 
 int main()
 {
 	NAMESPACE::vector<int>	v;
 
-	PRINT_EXECUTE(v.size());
+	v.reserve(SIZE);
+	for (int i = 0; i < SIZE; i++)
+		v[i] = i;
+	
+	ft::vector<int>::reverse_iterator		rit;
 
-	v.pop_back();
 
-	PRINT_EXECUTE(v.size());
+//	NAMESPACE::vector<int>::const_reverse_iterator	rit, rite;
+
+//	for (rit = v.rbegin(), rite = v.rend();
+//		 rit != rite;
+//		 ++rit)
+//	{
+//		std::cout	<< *rit
+//					<< std::endl;
+//	}
+//	std::cout	<< typeid (NAMESPACE::vector<int>::reverse_iterator).name()
+//				<< std::endl;
+
+//	NAMESPACE::vector<int>	v;
+//
+//	PRINT_EXECUTE(v.size());
+//
+//	v.pop_back();
+//
+//	PRINT_EXECUTE(v.size());
 // 	vector<int>			test(3, 3);
 
 // 	cout << "self assignation test\n";

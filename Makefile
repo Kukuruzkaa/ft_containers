@@ -2,20 +2,14 @@ NEW_DIR				= mkdir -p
 DEL_DIR				= rm -rf
 
 CC					= c++
-VALGRIND			= valgrind
 COMPILE_FLAG		= $(DEPS_FLAG) -std=c++98 -Wall -Werror -Wextra -g
 FT_FLAG				= -DNAMESPACE=ft
 STD_FLAG			= 
 DEPS_FLAG			= -MMD -MP
-INCLUDES_FLAG		= $(addprefix -I,	$(INCLUDES_DIR))
-MAKE_OTHER_DIR		= make -C
+INCLUDES_FLAG		= -I ./
 
 OBJS_DIR_FT			= ft_objs/
 OBJS_DIR_STD		= std_objs/
-SRCS_DIR			= srcs/
-INCLUDES_DIR		= ./
-
-VPATH				= $(SRCS_DIR)
 
 DEFAULT_FILES		= operator structor member accessor
 SRCS				= $(addsuffix .cpp,		tests_vector)
@@ -27,8 +21,6 @@ FT_EXE				= ft_vector
 STD_EXE				= std_vector
 
 all					: $(OBJS_DIR_FT) $(OBJS_DIR_STD) $(FT_EXE) $(STD_EXE)
-
-ft_compile			:
 
 $(OBJS_DIR_FT)			:
 					$(NEW_DIR) $@
