@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/08 18:27:38 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/09 21:55:00 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,13 +223,7 @@ namespace ft {
 				if (size() + count > capacity()) 
 					reserve(std::max<size_type>(count + size(), 2 * size()));
 				size_t nbElem = _size - i;
-				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it) 
-				{
-					if (it >= end())
-						_alloc.construct(it, *(it - count));
-					else
-						*it = *(it - count);
-				}
+				_insert(count, nbElem);
 				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it)
 				{
@@ -249,24 +243,18 @@ namespace ft {
 				if (&(*first) > &(*last))
 					throw::std::length_error("vector::reserve");
 				InputIt	tmp = first;
-				size_t	range = 0;
+				size_t	count = 0;
 				while (tmp != last)
 				{
 					tmp++;
-					range++;
+					count++;
 				}
-				if (_size + range > _capacity)
-					reserve(std::max<size_type>((_size + range), _size * 2));
+				if (_size + count > _capacity)
+					reserve(std::max<size_type>((_size + count), _size * 2));
 				size_t nbElem = _size - i;
-				for (pointer it = end() + range - 1; it > end() + range - 1 - nbElem; --it)
-				{
-					if (it >= end())
-						_alloc.construct(it, *(it - range));
-					else
-						*it = *(it - range);
-				}
+				_insert(count, nbElem);
 				pos = _arr + i;
-				for (pointer it = pos; it < pos + range; ++it, ++first)
+				for (pointer it = pos; it < pos + count; ++it, ++first)
 				{
 				
 					if (it >= _arr + _size)
@@ -274,7 +262,7 @@ namespace ft {
 					else
 						*it = *first;
 				}
-				_size = _size + range;
+				_size = _size + count;
 			}
 			
 			iterator                erase(iterator pos)
@@ -354,10 +342,23 @@ namespace ft {
 			}
 
 		private:
-			allocator_type  _alloc;
+			allocator_type  	_alloc;
 			pointer             _arr; // Should be pointer ?
-			size_t          _size;
-			size_t          _capacity;
+			size_t         	 	_size;
+			size_t          	_capacity;
+
+			void				_insert(size_t count, size_t nbElem)
+			{
+				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it)
+				{
+					if (it >= end())
+						_alloc.construct(it, *(it - count));
+					else
+						*it = *(it - count);
+				}
+			}
+
+			
 	};
 
 	template <class T, class Alloc> 

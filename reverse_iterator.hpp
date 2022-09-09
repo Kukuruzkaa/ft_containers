@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 17:17:23 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/09 21:33:53 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/09 22:16:29 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,60 +90,64 @@ namespace ft {
             current += n;
             return *this;
         }
+        reference operator[](difference_type n) const
+        {
+            return current[-n-1];
+        }
     };
 
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool    operator==(
-        const reverse_iterator<Iterator1> & lhs,
-        const reverse_iterator<Iterator2> & rhs)
+        const reverse_iterator<IteratorLeft> & lhs,
+        const reverse_iterator<IteratorRight> & rhs)
     {
         return (lhs.base() == rhs.base());
     }
             
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool operator<(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return lhs.base() > rhs.base();
     }
             
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool operator!=(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return lhs.base() != rhs.base();
     }
             
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool operator>(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return lhs.base() < rhs.base();
     }
 
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool operator>=(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return lhs.base() <= rhs.base();
     }
             
-    template <class Iterator1, class Iterator2>
+    template <class IteratorLeft, class IteratorRight>
     bool operator<=(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return lhs.base() >= rhs.base();
     }
             
-    template <class Iterator1, class Iterator2>
-    typename reverse_iterator<Iterator1>::difference_type operator-(
-        const reverse_iterator<Iterator1>& lhs,
-        const reverse_iterator<Iterator2>& rhs)
+    template <class IteratorLeft, class IteratorRight>
+    typename reverse_iterator<IteratorLeft>::difference_type operator-(
+        const reverse_iterator<IteratorLeft>& lhs,
+        const reverse_iterator<IteratorRight>& rhs)
     {
         return rhs.base() - lhs.base();
     }
