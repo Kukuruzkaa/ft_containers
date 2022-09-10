@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/09 22:43:34 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/10 18:58:57 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,9 @@ namespace ft {
 			{
 				difference_type i = pos - begin();
 				_insert(count, i);
-				pos = _arr + i;
+				pos = _arr + i;template<typename T>
+        typedef T       value_type;
+    
 				for (pointer it = pos; it < pos + count; ++it)
 				{
 					if (it >= _arr + _size)
@@ -278,7 +280,7 @@ namespace ft {
 			
 			void                    pop_back()
 			{
-					erase(end() - 1);
+				erase(end() - 1);
 			}
 			
 			void                    swap(vector& rhs)
@@ -351,9 +353,7 @@ namespace ft {
 					else
 						*it = *(it - count);
 				}
-			}
-
-			
+			}		
 	};
 
 	template <class T, class Alloc> 
