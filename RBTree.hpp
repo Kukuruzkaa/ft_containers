@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/11 17:09:24 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:33:44 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,11 @@ namespace ft {
     class RBTree {
 
         public:
-            typedef Allocator   allocator_type;
-            typedef Compare     key_compare;
+            typedef T                   value_type;
+            typedef Allocator           allocator_type;
+            typedef Compare             key_compare;
+            typedef Node<T>  const &    _node;
+      
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
                 : _alloc(alloc), _key_comp(key_comp), _sentinel(_alloc.allocate(_sentinel)), _root(_alloc.allocate(_sentinel))
@@ -76,7 +79,7 @@ namespace ft {
                 _alloc.deallocate(_sentinel);
             }
 
-            void    right_rotation(Node <T> & lhs, Node <T> & rhs)
+            void    right_rotation(_node lhs, _node rhs)
             {
                 if (lhs->_p != _sentinel)
                 {
@@ -91,7 +94,7 @@ namespace ft {
                 rhs->_right = lhs;
             }
 
-            void    left_rotation(Node <T> & lhs, Node<T> & rhs)
+            void    left_rotation(_node lhs, _node rhs)
             {
                 if (rhs->_p != _sentinel)
                 {
@@ -104,7 +107,80 @@ namespace ft {
                 rhs->_p = lhs;
                 rhs->_right = lhs->_left;
                 lhs->_left = rhs;
-            }  
+            } 
+
+            void    InorderTreeWalk(_node node)
+            {
+                if (node == _sentinel)
+                    return ;
+                InorderTreeWalk(node->_left);
+                std::cout << node->_key << std::endl;
+                InorderTreeWalk(node->_right);
+            }
+
+            _node    TreeSearch(_node node, value_type key)
+            {
+                if (node == _sentinel || key == node->_key)
+                    return node;
+                if (key < node->_key)
+                    return TreeSearch(node->_left, key);
+                return TreeSearch(node->_right, key);
+            }
+
+            _node    IterTreeSearch(_node node, value_type key)
+            {
+                while (node != _sentinel && key != node->_key)
+                {
+                    if (key < node->_key)
+                        node = node->_left;
+                    node = node->_right;
+                }
+                return node;
+            }
+
+            _node   TreeMin(_node node)
+            {
+                while (node->_left != _sentinel)
+                {
+                    node = node->_left;
+                }
+                return node;
+            }
+
+            _node   TreeMax(_node node)
+            {
+                while (node->_right != _sentinel)
+                {
+                    node = node->_right;
+                }
+                return node;
+            }
+
+            _node   successor(_node x)
+            {
+                if (x->_right != _sentinel)
+                    return TreeMin(x->_right);
+                _node y = x->_p;
+                while (y != _sentinel && x == y->_right)
+                {
+                    x = y;
+                    y = y->_p;
+                }
+                return y;
+            }
+
+            _node   predecessor(_node x)
+            {
+                if (x->_left != _sentinel)
+                    return TreeMax(x->_left);
+                _node y = x->_left;
+                 while (y != _sentinel && x == y->_left)
+                {
+                    x = y;
+                    y = y->_p;
+                }
+                return y;
+            }
 
         private:
             allocator_type      _alloc;
