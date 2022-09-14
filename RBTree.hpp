@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/13 21:33:44 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/14 21:20:30 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define BLACK 0
 #include <cstdlib>
 #include <memory>
+#include <iostream>
     
 namespace ft {
 
@@ -49,12 +50,6 @@ namespace ft {
             Node *           _right; 
             bool             _color; 
     };
-
-    typedef struct s_pair
-    {
-        int x;
-        int y;
-    }       t_pair;
 
     
     template<typename T, class Compare, class Allocator>
@@ -173,7 +168,7 @@ namespace ft {
             {
                 if (x->_left != _sentinel)
                     return TreeMax(x->_left);
-                _node y = x->_left;
+                _node y = x->_p;
                  while (y != _sentinel && x == y->_left)
                 {
                     x = y;
@@ -182,11 +177,78 @@ namespace ft {
                 return y;
             }
 
+            void    transplant(_node u, _node x)
+            {
+                if (u->_p == _sentinel)
+                    _root = x;
+                else if (u == u->_p->_left)
+                    u->_p->_left = x;
+                else
+                    u->_p->_right = x;
+                x->_p = u->_p;
+            }
+
+            void    insert(_node z)
+            {
+                _node y = _sentinel;
+                _node x = _root;
+                
+                while(x != _sentinel)
+                {
+                    y = x;
+                    if (z->_key < x->_key)
+                        x = x->_left;
+                    else
+                        x = x->_right;
+                }
+                z->_p = y;
+                if (y == _sentinel)
+                    _root = z;
+                else if (z->_key < y->_key)
+                    y->_left = z;
+                else  
+                    y->_right = z;
+                z->_left = _sentinel;
+                z->_right = _sentinel;
+                z->_color = RED;
+                insertFixUp(z);
+            }
+
         private:
             allocator_type      _alloc;
             key_compare         _key_comp;
             Node<T> *           _sentinel;
-            Node<T> *           _root;         
+            Node<T> *           _root;  
+            
+            void    insertFixUp(_node z)
+            {
+                while(z->_p->_color == RED)
+                {
+                    if (z->_p == z->_p->_p->_left)
+                    {
+                       _node y = z->_p->_p->_right;
+                        if (y->_color == RED)
+                        {
+                            z->_p->_color = BLACK;
+                            y->_color = BLACK;
+                            z->_p->_p->_color = RED;
+                            z = z->_p;
+                        }
+                        else
+                        {
+                            if (z == z->_p->_right)
+                            {
+                                z = z->_p;
+                                left_rotation(z, z->_p);
+                            }
+                            z->_p->_color = BLACK;
+                            z->_p->_p->_color = RED;
+                            right_rotation(z->_p, z);
+                        }
+                    }
+                }
+                _root->color = BLACK;  
+            }      
     }; 
 }
 
