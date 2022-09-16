@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/14 21:20:30 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/16 19:10:53 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ namespace ft {
             Node() : 
                 _key(), _p(NULL), _left(NULL), _right(NULL), _color(BLACK) {}
             Node (const value_type & key, const Node * p, const Node * left, 
-                    const Node * right, bool color)
+                    const Node * right, bool)
                     : _key(key), _p(p), _left(left), _right(right), _color(RED) {}
             Node(Node & src) : 
                 _key(src._key), _left(src._left), _right(src._right), _color(src._color) {}
@@ -60,51 +60,88 @@ namespace ft {
             typedef T                   value_type;
             typedef Allocator           allocator_type;
             typedef Compare             key_compare;
-            typedef Node<T>  const &    _node;
+            typedef Node<T>   const &   _node_ref;
+            typedef Node<T>             _node;
       
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
                 : _alloc(alloc), _key_comp(key_comp), _sentinel(_alloc.allocate(_sentinel)), _root(_alloc.allocate(_sentinel))
             {
+                std::cout << "RBTree constructor" << std::endl;
                 _alloc.construct(_sentinel);
             }
             ~RBTree()
             {
+                std::cout << "RBTree destructor" << std::endl;
                 _alloc.destroy(_sentinel);
                 _alloc.deallocate(_sentinel);
             }
 
-            void    right_rotation(_node lhs, _node rhs)
+            // void    right_rotation(_node lhs, _node rhs)
+            // {
+            //     if (lhs->_p != _sentinel)
+            //     {
+            //         if (lhs->_p->_left == lhs)
+            //             lhs->_p->_left = rhs;
+            //         else   
+            //             lhs->_p->_right = rhs;
+            //     }
+            //     rhs->_p = lhs->_p;
+            //     lhs->_p = rhs;
+            //     lhs->_left = rhs->_right;
+            //     rhs->_right = lhs;
+            // }
+
+            // void    left_rotation(_node lhs, _node rhs)
+            // {
+            //     if (rhs->_p != _sentinel)
+            //     {
+            //         if (rhs->_p->_left == rhs)
+            //             rhs->_p->_left = lhs;
+            //         else   
+            //             rhs->_p->_right = lhs;
+            //     }
+            //     lhs->_p = rhs->_p;
+            //     rhs->_p = lhs;
+            //     rhs->_right = lhs->_left;
+            //     lhs->_left = rhs;
+            // }
+
+            void    leftRotation(_node_ref x)
             {
-                if (lhs->_p != _sentinel)
-                {
-                    if (lhs->_p->_left == lhs)
-                        lhs->_p->_left = rhs;
-                    else   
-                        lhs->_p->_right = rhs;
-                }
-                rhs->_p = lhs->_p;
-                lhs->_p = rhs;
-                lhs->_left = rhs->_right;
-                rhs->_right = lhs;
+                _node y = x->_right;
+                x->_right = y->_left;
+                if (y->_left != _sentinel)
+                    y->_left->_p = x;
+                y->_p = x->_p;
+                if (x->_p == _sentinel)
+                    _root = y;
+                else if (x == x->_p->_left)
+                    x->_p->_left = y;
+                else
+                    x->_p->_right = y;
+                y->_left = x;
+                x->_p = y;                
+            }
+            
+            void    rightRotation(_node_ref x)
+            {
+                _node y = x->_left;
+                x->_left = y->_right;
+                if (y->_right != _sentinel)
+                    y->_right->_p = x;
+                y->_p = x->_p;
+                if (x->_p == _sentinel)
+                    _root = y;
+                else if (x == x->_p->_right)
+                    x->_p->_right = y;
+                else
+                    x->_p_left = y;
+                y->_right = x;
+                x->_p = y;
             }
 
-            void    left_rotation(_node lhs, _node rhs)
-            {
-                if (rhs->_p != _sentinel)
-                {
-                    if (rhs->_p->_left == rhs)
-                        rhs->_p->_left = lhs;
-                    else   
-                        rhs->_p->_right = lhs;
-                }
-                lhs->_p = rhs->_p;
-                rhs->_p = lhs;
-                rhs->_right = lhs->_left;
-                lhs->_left = rhs;
-            } 
-
-            void    InorderTreeWalk(_node node)
+            void    InorderTreeWalk(_node_ref node)
             {
                 if (node == _sentinel)
                     return ;
@@ -113,7 +150,7 @@ namespace ft {
                 InorderTreeWalk(node->_right);
             }
 
-            _node    TreeSearch(_node node, value_type key)
+            _node    TreeSearch(_node_ref node, value_type key)
             {
                 if (node == _sentinel || key == node->_key)
                     return node;
@@ -122,7 +159,7 @@ namespace ft {
                 return TreeSearch(node->_right, key);
             }
 
-            _node    IterTreeSearch(_node node, value_type key)
+            _node    IterTreeSearch(_node_ref node, value_type key)
             {
                 while (node != _sentinel && key != node->_key)
                 {
@@ -133,7 +170,7 @@ namespace ft {
                 return node;
             }
 
-            _node   TreeMin(_node node)
+            _node   TreeMin(_node_ref node)
             {
                 while (node->_left != _sentinel)
                 {
@@ -142,7 +179,7 @@ namespace ft {
                 return node;
             }
 
-            _node   TreeMax(_node node)
+            _node   TreeMax(_node_ref node)
             {
                 while (node->_right != _sentinel)
                 {
@@ -151,7 +188,7 @@ namespace ft {
                 return node;
             }
 
-            _node   successor(_node x)
+            _node   successor(_node_ref x)
             {
                 if (x->_right != _sentinel)
                     return TreeMin(x->_right);
@@ -164,7 +201,7 @@ namespace ft {
                 return y;
             }
 
-            _node   predecessor(_node x)
+            _node   predecessor(_node_ref x)
             {
                 if (x->_left != _sentinel)
                     return TreeMax(x->_left);
@@ -177,18 +214,18 @@ namespace ft {
                 return y;
             }
 
-            void    transplant(_node u, _node x)
+            void    transplant(_node_ref u, _node_ref v)
             {
                 if (u->_p == _sentinel)
-                    _root = x;
+                    _root = v;
                 else if (u == u->_p->_left)
-                    u->_p->_left = x;
+                    u->_p->_left = v;
                 else
-                    u->_p->_right = x;
-                x->_p = u->_p;
+                    u->_p->_right = v;
+                v->_p = u->_p;
             }
 
-            void    insert(_node z)
+            void    insertNode(_node_ref z)
             {
                 _node y = _sentinel;
                 _node x = _root;
@@ -214,13 +251,52 @@ namespace ft {
                 insertFixUp(z);
             }
 
+            void    deleteNode(_node_ref z)
+            {
+                _node_ref y = z;
+                _node x;
+                bool y_color = y->_color;
+                if (z->_left == _sentinel)
+                {
+                    x = z->_right;
+                    transplant(z, z->_right);
+                }
+                else if (z->_right == _sentinel)
+                {
+                    x = z->_left;
+                    transplant(z, z->_left);      
+                }
+                else
+                {
+                    y = TreeMin(z->_right);
+                    y_color = y->_color;
+                    x = y->_right;
+                    if (y->_p == z)
+                        x->_p = y;
+                    else
+                    {
+                        transplant(y, y->_right);
+                        y->_right = z->_right;
+                        y->_right->_p = y;
+
+                    }
+                    transplant(z, y);
+                    y->_left = z->_left;
+                    y->_left->_p = y;
+                    y->_color = z->_color; 
+                }
+                if (y_color == BLACK)
+                    deleteFixUp(x);
+            }
+
+
         private:
             allocator_type      _alloc;
             key_compare         _key_comp;
             Node<T> *           _sentinel;
             Node<T> *           _root;  
             
-            void    insertFixUp(_node z)
+            void    insertFixUp(_node_ref z)
             {
                 while(z->_p->_color == RED)
                 {
@@ -239,15 +315,53 @@ namespace ft {
                             if (z == z->_p->_right)
                             {
                                 z = z->_p;
-                                left_rotation(z, z->_p);
+                                leftRotate(z);
                             }
                             z->_p->_color = BLACK;
                             z->_p->_p->_color = RED;
-                            right_rotation(z->_p, z);
+                            rightRotate(z->_p->_p);
                         }
                     }
                 }
                 _root->color = BLACK;  
+            }
+            
+            void    deleteFixUp(_node_ref x)
+            {
+                _node y;
+                
+                while (x != _sentinel && x->_color == BLACK)
+                {
+                    if (x == x->_p->_left)
+                    {
+                        y = x->_p->_right;
+                        if (y->_clor == RED)
+                        {
+                            y->_color == BLACK;
+                            x->_p->_color = RED;
+                            leftRotation(x->_p);
+                            y = x->_p->_right;
+                        }
+                        if (y->_left->_color == BLACK && y->_right->_color == BLACK)
+                        {
+                            y->_color = RED;
+                            x = x->_p;
+                        }
+                        else if (y->_right->_color == BLACK)
+                        {
+                            y->_left->_color = BLACK;
+                            y->_color = RED;
+                            rightRotation(y);
+                            y = x->_p->_right;
+                        }
+                        y->_color = x->_p->_color;
+                        x->_p->_color = BLACK;
+                        y->_right->_color = BLACK;
+                        leftRotation(x->_p);
+                        x = _root;
+                    }   
+                }
+                x->_color = BLACK; 
             }      
     }; 
 }
