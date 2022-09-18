@@ -11,29 +11,14 @@
 /* ************************************************************************** */
 
 #include <iostream>
-#include "RBTree.h"
+#include "RBTree.hpp"
 
 using namespace ft;
 
 int main() 
 {
 	RBTree<int> bst;
-
-	// std::cout   << "_sentinel   == "
-	// 			<< bst._sentinel
-	// 			<< std::endl
-	// 			<< "root == "
-	// 			<< bst._root
-	// 			<< std::endl
-	// 			<< std::endl;
 	bst.insertNode(8);
-	// std::cout   << "_sentinel   == "
-    //         << bst._sentinel
-    //         << std::endl
-    //         << "root == "
-    //         << bst._root
-    //         << std::endl
-    //         << std::endl;
 	bst.insertNode(18);
 	bst.insertNode(5);
 	bst.insertNode(15);
@@ -41,9 +26,29 @@ int main()
 	bst.insertNode(25);
 	bst.insertNode(40);
 	bst.insertNode(80);
-	// bst.deleteNode(25);
+	bst.insertNode(90);
+	bst.insertNode(101);
+	bst.insertNode(3);
+	bst.insertNode(0);
+	bst.insertNode(74);
+	bst.insertNode(1111);
+	bst.insertNode(2147483647);
+	bst.insertNode(-4);
+	
 	// bst.treePrint();
 	bst.print();
+	std::cout << "avant delete" << std::endl;
 
+	bst.deleteNode(80);
+	bst.deleteNode(25);
+	bst.deleteNode(8);
+	bst.deleteNode(40);
+	bst.deleteNode(15);
+	bst.deleteNode(18);
+	bst.deleteNode(5);
+	bst.deleteNode(17);
+	bst.deleteNode(17);
+	bst.deleteNode(81);
+	bst.print();
 	return 0;
 }

@@ -6,17 +6,25 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/16 19:10:53 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/18 15:07:32 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RBTREE_CLASS_HPP
-# define RBTREE_CLASS_HPP
+#ifndef RBTREE_CLASS_H
+# define RBTREE_CLASS_H
 # define RED   1
 # define BLACK 0
+
+# define RESET "\033[0m"
+# define BLACK_TEXT "\033[30m"
+# define RED_TEXT "\033[31m"
+# define WHITE_BACK "\033[47m"
+
 #include <cstdlib>
 #include <memory>
 #include <iostream>
+#include <vector>
+#include <sstream>
     
 namespace ft {
 
@@ -28,11 +36,10 @@ namespace ft {
              
             Node() : 
                 _key(), _p(NULL), _left(NULL), _right(NULL), _color(BLACK) {}
-            Node (const value_type & key, const Node * p, const Node * left, 
-                    const Node * right, bool)
+            Node (const value_type & key, Node * p, Node * left, Node * right, bool)
                     : _key(key), _p(p), _left(left), _right(right), _color(RED) {}
-            Node(Node & src) : 
-                _key(src._key), _left(src._left), _right(src._right), _color(src._color) {}
+            Node(Node const & src) : 
+                _key(src._key), _p(src._p), _left(src._left), _right(src._right), _color(src._color) {}
             Node & operator=(Node & rhs)
             {
                 _key = rhs._key;
@@ -52,64 +59,48 @@ namespace ft {
     };
 
     
-    template<typename T, class Compare, class Allocator>
+    template<typename T, class Allocator = std::allocator<Node<T> > >
     
     class RBTree {
 
         public:
             typedef T                   value_type;
             typedef Allocator           allocator_type;
-            typedef Compare             key_compare;
-            typedef Node<T>   const &   _node_ref;
+            // typedef Compare             key_compare;
             typedef Node<T>             _node;
       
             
-            RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
-                : _alloc(alloc), _key_comp(key_comp), _sentinel(_alloc.allocate(_sentinel)), _root(_alloc.allocate(_sentinel))
+            RBTree(const allocator_type & alloc = allocator_type())
+                : _alloc(alloc)
             {
+                _sentinel = _alloc.allocate(1);
+                _node   tmp(value_type(), _sentinel, _sentinel, _sentinel, BLACK);
+                tmp._color = BLACK;
                 std::cout << "RBTree constructor" << std::endl;
-                _alloc.construct(_sentinel);
+                _alloc.construct(_sentinel, tmp);
+                _root = _sentinel;
             }
             ~RBTree()
             {
                 std::cout << "RBTree destructor" << std::endl;
                 _alloc.destroy(_sentinel);
-                _alloc.deallocate(_sentinel);
+                _alloc.deallocate(_sentinel, 1);
+                _destroy(_root);
+            }
+            
+            void    _destroy    (_node * node)
+            {
+                if (node == _sentinel)
+                    return ;
+                _destroy(node->_left);
+                _destroy(node->_right);
+                _alloc.destroy(node);
+                _alloc.deallocate(node, 1);
             }
 
-            // void    right_rotation(_node lhs, _node rhs)
-            // {
-            //     if (lhs->_p != _sentinel)
-            //     {
-            //         if (lhs->_p->_left == lhs)
-            //             lhs->_p->_left = rhs;
-            //         else   
-            //             lhs->_p->_right = rhs;
-            //     }
-            //     rhs->_p = lhs->_p;
-            //     lhs->_p = rhs;
-            //     lhs->_left = rhs->_right;
-            //     rhs->_right = lhs;
-            // }
-
-            // void    left_rotation(_node lhs, _node rhs)
-            // {
-            //     if (rhs->_p != _sentinel)
-            //     {
-            //         if (rhs->_p->_left == rhs)
-            //             rhs->_p->_left = lhs;
-            //         else   
-            //             rhs->_p->_right = lhs;
-            //     }
-            //     lhs->_p = rhs->_p;
-            //     rhs->_p = lhs;
-            //     rhs->_right = lhs->_left;
-            //     lhs->_left = rhs;
-            // }
-
-            void    leftRotation(_node_ref x)
+            void    leftRotation(_node * x)
             {
-                _node y = x->_right;
+                _node * y = x->_right;
                 x->_right = y->_left;
                 if (y->_left != _sentinel)
                     y->_left->_p = x;
@@ -124,9 +115,9 @@ namespace ft {
                 x->_p = y;                
             }
             
-            void    rightRotation(_node_ref x)
+            void    rightRotation(_node * x)
             {
-                _node y = x->_left;
+                _node* y = x->_left;
                 x->_left = y->_right;
                 if (y->_right != _sentinel)
                     y->_right->_p = x;
@@ -136,12 +127,12 @@ namespace ft {
                 else if (x == x->_p->_right)
                     x->_p->_right = y;
                 else
-                    x->_p_left = y;
+                    x->_p->_left = y;
                 y->_right = x;
                 x->_p = y;
             }
 
-            void    InorderTreeWalk(_node_ref node)
+            void    InorderTreeWalk(_node * node)
             {
                 if (node == _sentinel)
                     return ;
@@ -150,7 +141,7 @@ namespace ft {
                 InorderTreeWalk(node->_right);
             }
 
-            _node    TreeSearch(_node_ref node, value_type key)
+            _node  * TreeSearch(_node * node, value_type key)
             {
                 if (node == _sentinel || key == node->_key)
                     return node;
@@ -159,7 +150,7 @@ namespace ft {
                 return TreeSearch(node->_right, key);
             }
 
-            _node    IterTreeSearch(_node_ref node, value_type key)
+            _node  *    IterTreeSearch(_node * node, value_type key)
             {
                 while (node != _sentinel && key != node->_key)
                 {
@@ -170,7 +161,7 @@ namespace ft {
                 return node;
             }
 
-            _node   TreeMin(_node_ref node)
+            _node * TreeMin(_node * node)
             {
                 while (node->_left != _sentinel)
                 {
@@ -179,7 +170,7 @@ namespace ft {
                 return node;
             }
 
-            _node   TreeMax(_node_ref node)
+            _node * TreeMax(_node * node)
             {
                 while (node->_right != _sentinel)
                 {
@@ -188,24 +179,24 @@ namespace ft {
                 return node;
             }
 
-            _node   successor(_node_ref x)
+            _node  * successor(_node * x)
             {
                 if (x->_right != _sentinel)
                     return TreeMin(x->_right);
-                _node y = x->_p;
+                _node * y = x->_p;
                 while (y != _sentinel && x == y->_right)
                 {
                     x = y;
                     y = y->_p;
                 }
-                return y;
+                return *y;
             }
 
-            _node   predecessor(_node_ref x)
+            _node  *  predecessor(_node * x)
             {
                 if (x->_left != _sentinel)
                     return TreeMax(x->_left);
-                _node y = x->_p;
+                _node * y = x->_p;
                  while (y != _sentinel && x == y->_left)
                 {
                     x = y;
@@ -214,7 +205,7 @@ namespace ft {
                 return y;
             }
 
-            void    transplant(_node_ref u, _node_ref v)
+            void    transplant(_node * u, _node * v)
             {
                 if (u->_p == _sentinel)
                     _root = v;
@@ -225,36 +216,39 @@ namespace ft {
                 v->_p = u->_p;
             }
 
-            void    insertNode(_node_ref z)
+            void    insertNode(value_type z)
             {
-                _node y = _sentinel;
-                _node x = _root;
+                _node * parent = _sentinel;
+                _node * tmp = _root;
                 
-                while(x != _sentinel)
+                while(tmp != _sentinel)
                 {
-                    y = x;
-                    if (z->_key < x->_key)
-                        x = x->_left;
+                    parent = tmp;
+                    if (z < tmp->_key)
+                        tmp = tmp->_left;
                     else
-                        x = x->_right;
+                        tmp = tmp->_right;
                 }
-                z->_p = y;
-                if (y == _sentinel)
-                    _root = z;
-                else if (z->_key < y->_key)
-                    y->_left = z;
+                _node ** node = NULL;
+                if (parent == _sentinel)
+                    node = &_root;
+                else if (z < parent->_key)
+                    node = &parent->_left;
                 else  
-                    y->_right = z;
-                z->_left = _sentinel;
-                z->_right = _sentinel;
-                z->_color = RED;
-                insertFixUp(z);
+                    node = &parent->_right;
+                _node   temp(z, parent, _sentinel, _sentinel, 1);
+                *node = _alloc.allocate(1);
+                _alloc.construct(*node, temp);
+                insertFixUp(*node);
             }
 
-            void    deleteNode(_node_ref z)
+            void    deleteNode(value_type key)
             {
-                _node_ref y = z;
-                _node x;
+                _node * z = TreeSearch(_root, key);
+                _node * y, * x;
+                if (z == _sentinel)
+                    return ;
+                y = z;                
                 bool y_color = y->_color;
                 if (z->_left == _sentinel)
                 {
@@ -287,57 +281,212 @@ namespace ft {
                 }
                 if (y_color == BLACK)
                     deleteFixUp(x);
+                _alloc.destroy(z);
+                _alloc.deallocate(z, 1);
+            }
+            
+            void printHelper(_node * root, std::string indent, bool last) 
+            {
+                if (root != _sentinel) 
+                {
+                    std::cout<<indent;
+                    if (last) 
+                    {
+                        std::cout<<"R----";
+                        indent += "     ";
+                    }
+                    else 
+                    {
+                        std::cout<<"L----";
+                        indent += "|    ";
+                    }
+                }
+                std::string color = root->_color?"RED":"BLACK";
+		        std::cout<<root->_key<<"("<<color<<")"<<std::endl;
+		        printHelper(root->_left, indent, false);
+                printHelper(root->_right, indent, true);
+		    }
+
+            void treePrint() 
+            {
+                if (_root != _sentinel) 
+                    printHelper(_root, "", true);
+	        }
+
+            void	print	(void)
+            {
+                size_t	height = _height(_root);
+                std::vector<std::string>	tree;
+
+                tree.resize(height);
+                for (size_t i = 0; i < height; ++i)
+                    tree[i] += WHITE_BACK BLACK_TEXT;
+                _print(_root, tree, 0);
+                for (size_t i = 0; i < height; ++i)
+                    std::cout	<< tree[i]
+                                << std::endl;
+                std::cout	<< RESET
+                            << std::endl;
+            }
+    
+            void	_print	(_node * & node,
+                            std::vector<std::string> & tree,
+                            size_t depth,
+                            size_t pos = 0,
+                            size_t * left = NULL,
+                            size_t * right = NULL)
+            {
+                for (size_t i = _strsize(tree[depth]); i < pos; ++i)
+                    tree[depth] += " ";
+                if (node == _sentinel)
+                {
+                    if (node->_color == RED)
+                        tree[depth] += WHITE_BACK RED_TEXT "NIL" BLACK_TEXT;
+                    else
+                        tree[depth] += "NIL";
+                    if (left != NULL && right != NULL)
+                    {
+                        *left += 2;
+                        *right += 1;
+                    }
+                    return ;
+                }
+
+                std::stringstream	ss;
+                ss	<< node->_key;
+                size_t	cur_size = ss.str().size();
+
+                size_t	ll = 0, lr = 0;
+                _print(node->_left, tree, depth + 1, pos, &ll, &lr);
+                size_t	rl = 0, rr = 0;
+                _print(node->_right, tree, depth + 1, pos + ll + lr + 2 + cur_size, &rl, &rr);
+
+                for (size_t i = 0; i <= ll + lr; ++i)
+                {
+                    if (i == ll - 1)
+                        tree[depth] += "┌";
+                    else if (i >= ll)
+                        tree[depth] += "─";
+                    else
+                        tree[depth] += " ";
+                }
+                if (node->_color == RED)
+                    tree[depth] += WHITE_BACK RED_TEXT;
+                else
+                    tree[depth] += WHITE_BACK BLACK_TEXT;
+                tree[depth] += ss.str();
+                tree[depth] += BLACK_TEXT;
+                for (size_t i = 0; i <= rl; ++i)
+                {
+                    if (i == rl)
+                        tree[depth] += "┐";
+                    else
+                        tree[depth] += "─";
+                }
+                if (left != NULL && right != NULL)
+                {
+                    *left = ll + lr + ((cur_size + 1) / 2) + 1;
+                    *right = rl + rr + (cur_size / 2) + 1;
+                }
             }
 
+            size_t	_height	(_node * & node)
+            {
+                if (node == _sentinel)
+                    return (1);
+                return (1 + std::max(_height(node->_left), _height(node->_right)));
+            }
 
-        private:
+            size_t	_strsize	(std::string & str)
+            {
+                size_t	count = 0;
+
+                for (size_t i = 0; i < str.size(); ++i)
+                {
+                    std::string special = str.substr(i, 3);
+                    std::string	color = str.substr(i, 5);
+                    std::string	reset = str.substr(i, 4);
+                    if (special == "─" || special == "┌" || special == "┐")
+                        i += 2;
+                    else if (color == RED_TEXT || color == BLACK_TEXT || color == WHITE_BACK)
+                    {
+                        i += 4;
+                        --count;
+                    }
+                    ++count;
+                }
+                return (count);
+            }
+
+            private:
             allocator_type      _alloc;
-            key_compare         _key_comp;
+            // key_compare         _key_comp;
             Node<T> *           _sentinel;
             Node<T> *           _root;  
             
-            void    insertFixUp(_node_ref z)
+            void    insertFixUp(_node * node)
             {
-                while(z->_p->_color == RED)
+                while(node->_p->_color == RED)
                 {
-                    if (z->_p == z->_p->_p->_left)
+                    if (node->_p == node->_p->_p->_left)
                     {
-                       _node y = z->_p->_p->_right;
+                       _node * y = node->_p->_p->_right;
                         if (y->_color == RED)
                         {
-                            z->_p->_color = BLACK;
+                            node->_p->_color = BLACK;
                             y->_color = BLACK;
-                            z->_p->_p->_color = RED;
-                            z = z->_p;
+                            node->_p->_p->_color = RED;
+                            node = node->_p->_p;
                         }
                         else
                         {
-                            if (z == z->_p->_right)
+                             if (node == node->_p->_right)
                             {
-                                z = z->_p;
-                                leftRotate(z);
+                                node = node->_p;
+                                leftRotation(node);
                             }
-                            z->_p->_color = BLACK;
-                            z->_p->_p->_color = RED;
-                            rightRotate(z->_p->_p);
+                            node->_p->_color = BLACK;
+                            node->_p->_p->_color = RED;
+                            rightRotation(node->_p->_p);
+                        }
+                    }
+                    else
+                    {
+                        _node * y = node->_p->_p->_left;
+                        if (y->_color == RED)
+                        {
+                            node->_p->_color = BLACK;
+                            y->_color = BLACK;
+                            node->_p->_p->_color = RED;
+                            node = node->_p->_p;
+                        }
+                        else 
+                        {
+                            if (node == node->_p->_left)
+                            {
+                                node = node->_p;
+                                rightRotation(node);
+                            }
+                            node->_p->_color = BLACK;
+                            node->_p->_p->_color = RED;
+                            leftRotation(node->_p->_p);
                         }
                     }
                 }
-                _root->color = BLACK;  
+                _root->_color = BLACK;  
             }
             
-            void    deleteFixUp(_node_ref x)
+            void    deleteFixUp(_node * x)
             {
-                _node y;
-                
-                while (x != _sentinel && x->_color == BLACK)
+                _node * y;
+                while (x != _root && x->_color == BLACK)
                 {
                     if (x == x->_p->_left)
                     {
                         y = x->_p->_right;
-                        if (y->_clor == RED)
+                        if (y->_color == RED)
                         {
-                            y->_color == BLACK;
+                            y->_color = BLACK;
                             x->_p->_color = RED;
                             leftRotation(x->_p);
                             y = x->_p->_right;
@@ -347,86 +496,57 @@ namespace ft {
                             y->_color = RED;
                             x = x->_p;
                         }
-                        else if (y->_right->_color == BLACK)
+                        else 
                         {
-                            y->_left->_color = BLACK;
-                            y->_color = RED;
-                            rightRotation(y);
-                            y = x->_p->_right;
+                            if (y->_right->_color == BLACK)
+                            {
+                                y->_left->_color = BLACK;
+                                y->_color = RED;
+                                rightRotation(y);
+                                y = x->_p->_right;
+                            }
+                            y->_color = x->_p->_color;
+                            x->_p->_color = BLACK;
+                            y->_right->_color = BLACK;
+                            leftRotation(x->_p);
+                            x = _root;
                         }
-                        y->_color = x->_p->_color;
-                        x->_p->_color = BLACK;
-                        y->_right->_color = BLACK;
-                        leftRotation(x->_p);
-                        x = _root;
-                    }   
-                }
+                    }
+                    else
+                    {
+                        y = x->_p->_left;
+                        if (y->_color == RED)
+                        {
+                            y->_color = BLACK;
+                            x->_p->_color = RED;
+                            rightRotation(x->_p);
+                            y = x->_p->_left;
+                        }
+                        if (y->_left->_color == BLACK && y->_right->_color == BLACK)
+                        {
+                            y->_color = RED;
+                            x = x->_p;
+                        }
+                        else 
+                        {
+                            if (y->_left->_color == BLACK)
+                            {
+                                y->_right->_color = BLACK;
+                                y->_color = RED;
+                                leftRotation(y);
+                                y = x->_p->_left;
+                            }
+                            y->_color = x->_p->_color;
+                            x->_p->_color = BLACK;
+                            y->_left->_color = BLACK;
+                            rightRotation(x->_p);
+                            x = _root;
+                        }
+                    }
+                }      
                 x->_color = BLACK; 
-            }      
-    }; 
+            }     
+    };  
 }
 
 #endif
-
-// // right rotation
-// root = B
-// B->parent = NIL
-// B->left = A
-// B->right= y
-// A->parent = B
-// A->left = a
-// A->right= b
-
-// if (B->parent != NIL)
-// {
-//     if (B->parent->left == B)
-//         B->parent->left = A;
-//     else   
-//         B->parent->right = A;
-// }
-// A->parent = B->parent;
-// B->parent = A;
-// B->left = A->right;
-// A->right = B;
-
-
-// B->parent = A
-// B->left = b
-// B->right = y
-// A->parent = NIL
-// A->left = a
-// A->right = B
-
-
-// //left rotation
-
-// root = A
-// A->parent = NIL
-// A->left = a
-// A->right= B
-// B->parent = A
-// B->left = b
-// B->right= y
-
-// if (A->parent != NIL)
-// {
-//     if (A->parent->left == A)
-//         A->parent->left = B;
-//     else   
-//         A->parent->right = B;
-// }
-// B->parent = A->parent
-// A->parent = B
-// A->right = B->left
-// B->left = A
-
-// B->parent = NIL
-// B->left = A
-// B->right = y
-// A->parent = B
-// A->left = a
-// A->right = b
-
-// typedef true RIGHT;
-// typedef false LEFT;
-
