@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/18 15:07:32 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/20 21:40:53 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,28 @@ namespace ft {
     };
 
     
-    template<typename T, class Allocator = std::allocator<Node<T> > >
+    template
+    <
+        typename T,
+        class Compare = std::less<T>,
+        class Allocator = std::allocator<Node<T> >
+    >
     
     class RBTree {
 
+
+        private:
+            typedef typename Allocator::template rebind<Node<T> >::other    _Node_alloc;
+            
         public:
             typedef T                   value_type;
             typedef Allocator           allocator_type;
-            // typedef Compare             key_compare;
+            typedef Compare             key_compare;
             typedef Node<T>             _node;
       
             
-            RBTree(const allocator_type & alloc = allocator_type())
-                : _alloc(alloc)
+            RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
+                : _alloc(alloc), _key_comp(key_comp)
             {
                 _sentinel = _alloc.allocate(1);
                 _node   tmp(value_type(), _sentinel, _sentinel, _sentinel, BLACK);
@@ -145,7 +154,7 @@ namespace ft {
             {
                 if (node == _sentinel || key == node->_key)
                     return node;
-                if (key < node->_key)
+                if (_key_comp(key, node->_key))
                     return TreeSearch(node->_left, key);
                 return TreeSearch(node->_right, key);
             }
@@ -154,7 +163,7 @@ namespace ft {
             {
                 while (node != _sentinel && key != node->_key)
                 {
-                    if (key < node->_key)
+                    if (_key_comp(key, node->_key))
                         node = node->_left;
                     node = node->_right;
                 }
@@ -172,10 +181,6 @@ namespace ft {
 
             _node * TreeMax(_node * node)
             {
-                while (node->_right != _sentinel)
-                {
-                    node = node->_right;
-                }
                 return node;
             }
 
@@ -184,11 +189,6 @@ namespace ft {
                 if (x->_right != _sentinel)
                     return TreeMin(x->_right);
                 _node * y = x->_p;
-                while (y != _sentinel && x == y->_right)
-                {
-                    x = y;
-                    y = y->_p;
-                }
                 return *y;
             }
 
@@ -224,7 +224,7 @@ namespace ft {
                 while(tmp != _sentinel)
                 {
                     parent = tmp;
-                    if (z < tmp->_key)
+                    if (_key_comp(z,tmp->_key))
                         tmp = tmp->_left;
                     else
                         tmp = tmp->_right;
@@ -232,7 +232,7 @@ namespace ft {
                 _node ** node = NULL;
                 if (parent == _sentinel)
                     node = &_root;
-                else if (z < parent->_key)
+                else if (_key_comp(parent->_key ,tmp->_key))
                     node = &parent->_left;
                 else  
                     node = &parent->_right;
@@ -420,7 +420,7 @@ namespace ft {
 
             private:
             allocator_type      _alloc;
-            // key_compare         _key_comp;
+            key_compare         _key_comp;
             Node<T> *           _sentinel;
             Node<T> *           _root;  
             
