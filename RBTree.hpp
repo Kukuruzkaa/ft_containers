@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/22 17:52:33 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/22 22:49:17 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include "map_iterator.hpp"
     
 namespace ft {
 
@@ -54,8 +55,59 @@ namespace ft {
             value_type       _key;
             Node *           _p; 
             Node *           _left; 
-            Node *           _right; 
-            bool             _color; 
+            Node *           _right;
+            bool             _color;
+
+            Node  * successor(void)
+            {
+                Node * parent = this;
+                Node * node = parent->_right;
+                
+                if (node != node->_right)
+                    return TreeMin(node);
+                return parent;
+            }
+
+            Node  *  predecessor(void)
+            {
+                Node * parent = this;
+                Node * node = parent->_left;
+                
+                if (node != node->_left)
+                    return TreeMax(node);
+                while (parent != parent->_left && node->_p == parent->_left)
+                {
+                    node->_p = parent;
+                    parent = parent->_p;
+                }
+                return parent;
+            }
+
+            Node * TreeMin(void)
+            {
+                Node * parent = this;
+                Node * kid = parent->_left;
+                
+                while (kid != kid->_left)
+                {
+                    parent = kid;
+                    kid = kid->_left;
+                }
+                return parent;
+            }
+
+            Node * TreeMax(void)
+            {
+                Node * parent = this;
+                Node * kid = parent->_right;
+                
+                while (kid != kid->_right)
+                {
+                    parent = kid;
+                    kid = kid->_right;
+                }
+                return parent;
+            }
     };
 
     
@@ -170,41 +222,6 @@ namespace ft {
                 return node;
             }
 
-            _node * TreeMin(_node * node)
-            {
-                while (node->_left != _sentinel)
-                {
-                    node = node->_left;
-                }
-                return node;
-            }
-
-            _node * TreeMax(_node * node)
-            {
-                return node;
-            }
-
-            _node  * successor(_node * x)
-            {
-                if (x->_right != _sentinel)
-                    return TreeMin(x->_right);
-                _node * y = x->_p;
-                return *y;
-            }
-
-            _node  *  predecessor(_node * x)
-            {
-                if (x->_left != _sentinel)
-                    return TreeMax(x->_left);
-                _node * y = x->_p;
-                 while (y != _sentinel && x == y->_left)
-                {
-                    x = y;
-                    y = y->_p;
-                }
-                return y;
-            }
-
             void    transplant(_node * u, _node * v)
             {
                 if (u->_p == _sentinel)
@@ -262,7 +279,7 @@ namespace ft {
                 }
                 else
                 {
-                    y = TreeMin(z->_right);
+                    y = z->_right->TreeMin();
                     y_color = y->_color;
                     x = y->_right;
                     if (y->_p == z)
@@ -322,11 +339,14 @@ namespace ft {
                 for (size_t i = 0; i < height; ++i)
                     tree[i] += WHITE_BACK BLACK_TEXT;
                 _print(_root, tree, 0);
+                tree[height - 1] += RESET;
+                std::cout   << WHITE_BACK  
+                            << std::endl;
                 for (size_t i = 0; i < height; ++i)
                     std::cout	<< tree[i]
                                 << std::endl;
-                std::cout	<< RESET
-                            << std::endl;
+                // std::cout	<< RESET
+                //             << std::endl;
             }
     
             void	_print	(_node * & node,
