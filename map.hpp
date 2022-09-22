@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/20 21:18:42 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/22 17:41:40 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ namespace ft {
     class Allocator = std::allocator<ft::pair<const Key, T> > >
     
     class map {
+
+        private:
+            typedef typename Allocator::template rebind< T >::other _Pair_alloc;
+            
         public:
             // types:
             typedef Key                                     key_type;

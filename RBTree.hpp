@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/20 21:40:53 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/22 17:52:33 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,20 @@ namespace ft {
       
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
-                : _alloc(alloc), _key_comp(key_comp)
+                : _alloc(alloc), _nalloc(alloc), _key_comp(key_comp)
             {
-                _sentinel = _alloc.allocate(1);
+                _sentinel = _nalloc.allocate(1);
                 _node   tmp(value_type(), _sentinel, _sentinel, _sentinel, BLACK);
                 tmp._color = BLACK;
                 std::cout << "RBTree constructor" << std::endl;
-                _alloc.construct(_sentinel, tmp);
+                _nalloc.construct(_sentinel, tmp);
                 _root = _sentinel;
             }
             ~RBTree()
             {
                 std::cout << "RBTree destructor" << std::endl;
-                _alloc.destroy(_sentinel);
-                _alloc.deallocate(_sentinel, 1);
+                _nalloc.destroy(_sentinel);
+                _nalloc.deallocate(_sentinel, 1);
                 _destroy(_root);
             }
             
@@ -103,8 +103,8 @@ namespace ft {
                     return ;
                 _destroy(node->_left);
                 _destroy(node->_right);
-                _alloc.destroy(node);
-                _alloc.deallocate(node, 1);
+                _nalloc.destroy(node);
+                _nalloc.deallocate(node, 1);
             }
 
             void    leftRotation(_node * x)
@@ -237,8 +237,8 @@ namespace ft {
                 else  
                     node = &parent->_right;
                 _node   temp(z, parent, _sentinel, _sentinel, 1);
-                *node = _alloc.allocate(1);
-                _alloc.construct(*node, temp);
+                *node = _nalloc.allocate(1);
+                _nalloc.construct(*node, temp);
                 insertFixUp(*node);
             }
 
@@ -281,8 +281,8 @@ namespace ft {
                 }
                 if (y_color == BLACK)
                     deleteFixUp(x);
-                _alloc.destroy(z);
-                _alloc.deallocate(z, 1);
+                _nalloc.destroy(z);
+                _nalloc.deallocate(z, 1);
             }
             
             void printHelper(_node * root, std::string indent, bool last) 
@@ -420,6 +420,7 @@ namespace ft {
 
             private:
             allocator_type      _alloc;
+            _Node_alloc         _nalloc;
             key_compare         _key_comp;
             Node<T> *           _sentinel;
             Node<T> *           _root;  

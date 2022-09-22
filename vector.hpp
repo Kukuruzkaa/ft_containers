@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/10 18:58:57 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/22 18:02:43 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,63 +19,67 @@
 #include "equal.hpp"
 #include "lexicographical_compare.hpp"
 #include <iostream>
+#include "iterator.hpp"
 #include "reverse_iterator.hpp"
 #include <algorithm> 
-
 
 namespace ft {
 	
 	template <class T, class Allocator = std::allocator<T> >
 	class vector
 	{
+		private:
+			typedef typename Allocator::template rebind< T >::other _T_alloc;
+			
 		public:
 			//**********MEMMBER TYPES**********
 			typedef T                                                   value_type;
 			typedef Allocator                                           allocator_type;
-			typedef             	size_t                  			size_type;
-			typedef            		ptrdiff_t                          	difference_type;
+			typedef             size_t                  				size_type;
+			typedef            	ptrdiff_t                          		difference_type;
 			
-			typedef typename    allocator_type::reference               reference;
-			typedef typename    allocator_type::const_reference         const_reference;
-			typedef typename    allocator_type::pointer                 pointer;
-			typedef typename    allocator_type::const_pointer           const_pointer;
+			typedef typename    _T_alloc::reference               		reference;
+			typedef typename    _T_alloc::const_reference         		const_reference;
+			typedef typename    _T_alloc::pointer                 		pointer;
+			typedef typename    _T_alloc::const_pointer           		const_pointer;
 			
 			typedef pointer                                             iterator;
 			typedef const_pointer                                       const_iterator;
 			typedef             ft::reverse_iterator<iterator>         	reverse_iterator; 
-			typedef             ft::reverse_iterator<const_iterator>   	const_reverse_iterator; 
+			typedef             ft::reverse_iterator<const_iterator>   	const_reverse_iterator;
+
 
 			//**********MEMBER FUNCTIONS**********  
 			explicit vector(const allocator_type & alloc = allocator_type()) 
-				: _alloc(alloc), _arr(_alloc.allocate(0)), _size(0), _capacity(0)
+				: _alloc(alloc), _valloc(alloc), _arr(_valloc.allocate(0)), _size(0), _capacity(0)
 			{
 				// std::cout << "Default vector constructor" << std::endl;
 			}
 			
 			explicit vector (size_type n, const value_type & val = value_type(), const allocator_type & alloc = allocator_type()) 
-				: _alloc(alloc), _arr(_alloc.allocate(n)), _size(n), _capacity(n)
+				: _alloc(alloc), _valloc(alloc), _arr(_valloc.allocate(n)), _size(n), _capacity(n)
 			{
 				// std::cout << "Parameters constructor" << std::endl;
 				for (size_t i = 0; i < _size; ++i)
-					_alloc.construct(&_arr[i], val);
+					_valloc.construct(&_arr[i], val);
 			}
 			
 			template < class InputIt> 
 				vector (InputIt first, InputIt last, const allocator_type & alloc = allocator_type(), 
 										typename ft::enable_if<!is_integral<InputIt>::value, bool>::type = 0)
-			   : _alloc(alloc), _arr(_alloc.allocate(0)), _size(0), _capacity(0)
+			   : _alloc(alloc), _valloc(alloc), _arr(_valloc.allocate(0)), _size(0), _capacity(0)
 			{
 				// std::cout << "Template constructor" << std::endl;
 				this->insert(this->begin(), first, last);
 			}
 			
 			vector (const vector & src)
-				: _alloc(src._alloc), _arr(_alloc.allocate(src._size)), _size(src._size), _capacity(src._size)
+				: _alloc(src._alloc), _valloc(src._valloc), _arr(_valloc.allocate(src._size)), _size(src._size), _capacity(src._size)
 			{
 				// std::cout << "Copy constructor" << std::endl;
 		 
 				for (size_t i = 0; i < _size; ++i)
-					_alloc.construct(&_arr[i], src._arr[i]);
+					_valloc.construct(&_arr[i], src._arr[i]);
 			}
 		   
 			~vector()
@@ -83,7 +87,7 @@ namespace ft {
 				// std::cout << "Destructor" << std::endl;
 					
 				clear();
-				_alloc.deallocate(_arr, _capacity);
+				_valloc.deallocate(_arr, _capacity);
 			}
 			
 			vector & operator=(const vector & rhs) 
@@ -107,14 +111,14 @@ namespace ft {
 				clear();
 				if (n > _capacity)
 				{
-					_alloc.deallocate(_arr, _capacity);
-					_arr = _alloc.allocate(n);
+					_valloc.deallocate(_arr, _capacity);
+					_arr = _valloc.allocate(n);
 					if (!_arr)
 						throw::std::bad_alloc();
 					_capacity = n;
 				}
 				for (size_t i = 0; i < n; ++i)
-					_alloc.construct(&_arr[i], val);
+					_valloc.construct(&_arr[i], val);
 				_size = n;
 			}
 
@@ -168,15 +172,15 @@ namespace ft {
 				if (new_cap > max_size()) throw::std::length_error("vector::reserve");
 				if (new_cap <= _capacity) return ;
 				
-				pointer new_arr = _alloc.allocate(new_cap);
+				pointer new_arr = _valloc.allocate(new_cap);
 				if (!new_arr)
 					throw::std::bad_alloc();		
 				for (size_t i = 0; i < _size; ++i)
 				{
-					_alloc.construct(new_arr + i, _arr[i]);
-					_alloc.destroy(&_arr[i]);
+					_valloc.construct(new_arr + i, _arr[i]);
+					_valloc.destroy(&_arr[i]);
 				}
-				_alloc.deallocate(_arr, _capacity);
+				_valloc.deallocate(_arr, _capacity);
 				_arr = new_arr;
 				_capacity = new_cap;
 			}
@@ -197,7 +201,7 @@ namespace ft {
 			void                    clear()
 			{
 				for (pointer it = _arr, ite = _arr + _size; it < ite; ++it)
-					_alloc.destroy(it);
+					_valloc.destroy(it);
 				_size = 0;
 			}
 			
@@ -213,13 +217,11 @@ namespace ft {
 			{
 				difference_type i = pos - begin();
 				_insert(count, i);
-				pos = _arr + i;template<typename T>
-        typedef T       value_type;
-    
+				pos = _arr + i;
 				for (pointer it = pos; it < pos + count; ++it)
 				{
 					if (it >= _arr + _size)
-						_alloc.construct(it, value);
+						_valloc.construct(it, value);
 					else
 						*it = value;
 				}
@@ -245,7 +247,7 @@ namespace ft {
 				{
 				
 					if (it >= _arr + _size)
-						_alloc.construct(it, *first);
+						_valloc.construct(it, *first);
 					else
 						*it = *first;
 				}
@@ -268,7 +270,7 @@ namespace ft {
 					last++;
 				}
 				for (pointer it = end() - 1; it >= end() - toRemove; --it)
-					_alloc.destroy(it);
+					_valloc.destroy(it);
 				_size = _size - toRemove;
 				return first;
 			}
@@ -329,6 +331,7 @@ namespace ft {
 
 		private:
 			allocator_type  	_alloc;
+			_T_alloc			_valloc;
 			pointer             _arr; // Should be pointer ?
 			size_t         	 	_size;
 			size_t          	_capacity;
@@ -349,7 +352,7 @@ namespace ft {
 				for (pointer it = end() + count - 1; it > end() + count - 1 - nbElem; --it)
 				{
 					if (it >= end())
-						_alloc.construct(it, *(it - count));
+						_valloc.construct(it, *(it - count));
 					else
 						*it = *(it - count);
 				}
