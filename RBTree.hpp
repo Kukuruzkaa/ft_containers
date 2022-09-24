@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/22 22:49:17 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/24 23:02:38 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,97 @@
     
 namespace ft {
 
+    template < typename T > class Node;
+
+    struct nodeBase {
+
+        nodeBase *           _p; 
+        nodeBase *           _left; 
+        nodeBase *           _right;
+        bool                 _color;
+            
+        nodeBase  * successor(void)
+        {
+            nodeBase * parent = this;
+            nodeBase * node = parent->_right;
+            
+            if (node != node->_right)
+                return node->TreeMin();
+            return parent;
+        }
+
+        nodeBase  *  predecessor(void)
+        {
+            nodeBase * parent = this;
+            nodeBase * node = parent->_left;
+            
+            if (node != node->_left)
+                return node->TreeMax();
+            while (parent != parent->_left && node->_p == parent->_left)
+            {
+                node->_p = parent;
+                parent = parent->_p;
+            }
+            return parent;
+        }
+
+        nodeBase * TreeMin(void)
+        {
+            nodeBase * parent = this;
+            nodeBase * kid = parent->_left;
+            
+            while (kid != kid->_left)
+            {
+                parent = kid;
+                kid = kid->_left;
+            }
+            return parent;
+        }
+
+        nodeBase * TreeMax(void)
+        {
+            nodeBase * parent = this;
+            nodeBase * kid = parent->_right;
+            
+            while (kid != kid->_right)
+            {
+                parent = kid;
+                kid = kid->_right;
+            }
+            return parent;
+        }
+    };
+    
     template<typename T>
-    class Node {
+    class Node : public nodeBase {
         
         public:
             typedef T       value_type;
              
             Node() : 
-                _key(), _p(NULL), _left(NULL), _right(NULL), _color(BLACK) {}
-            Node (const value_type & key, Node * p, Node * left, Node * right, bool)
-                    : _key(key), _p(p), _left(left), _right(right), _color(RED) {}
+                _key()  
+            {
+                _p = NULL;
+                _left = NULL;
+                _right = NULL;
+                _color = BLACK;
+            }
+            Node (const value_type & key, nodeBase * p, nodeBase * left, nodeBase * right, bool)
+                    : _key(key)
+            {
+                _p = p;
+                _left = left;
+                _right = right;
+                _color = RED;
+            }
             Node(Node const & src) : 
-                _key(src._key), _p(src._p), _left(src._left), _right(src._right), _color(src._color) {}
+                _key(src._key)
+            {
+                _p = src._p;
+                _left = src._left;
+                _right = src._right;
+                _color = src._color;
+            }
             Node & operator=(Node & rhs)
             {
                 _key = rhs._key;
@@ -53,61 +132,6 @@ namespace ft {
             ~Node() {}
             
             value_type       _key;
-            Node *           _p; 
-            Node *           _left; 
-            Node *           _right;
-            bool             _color;
-
-            Node  * successor(void)
-            {
-                Node * parent = this;
-                Node * node = parent->_right;
-                
-                if (node != node->_right)
-                    return TreeMin(node);
-                return parent;
-            }
-
-            Node  *  predecessor(void)
-            {
-                Node * parent = this;
-                Node * node = parent->_left;
-                
-                if (node != node->_left)
-                    return TreeMax(node);
-                while (parent != parent->_left && node->_p == parent->_left)
-                {
-                    node->_p = parent;
-                    parent = parent->_p;
-                }
-                return parent;
-            }
-
-            Node * TreeMin(void)
-            {
-                Node * parent = this;
-                Node * kid = parent->_left;
-                
-                while (kid != kid->_left)
-                {
-                    parent = kid;
-                    kid = kid->_left;
-                }
-                return parent;
-            }
-
-            Node * TreeMax(void)
-            {
-                Node * parent = this;
-                Node * kid = parent->_right;
-                
-                while (kid != kid->_right)
-                {
-                    parent = kid;
-                    kid = kid->_right;
-                }
-                return parent;
-            }
     };
 
     
@@ -125,11 +149,30 @@ namespace ft {
             typedef typename Allocator::template rebind<Node<T> >::other    _Node_alloc;
             
         public:
-            typedef T                   value_type;
-            typedef Allocator           allocator_type;
-            typedef Compare             key_compare;
-            typedef Node<T>             _node;
-      
+            typedef T                                       value_type;
+            typedef Allocator                               allocator_type;
+            typedef Compare                                 key_compare;
+            typedef Node<value_type>                        _node;
+            typedef map_iterator<value_type>                iterator; 
+            typedef const map_iterator<value_type>          const_iterator;
+            
+            iterator    begin   (void)
+            {
+                _node * node = _root;
+
+                while (node->_left != _sentinel)
+                    node = node->_left;
+                return (iterator(node));
+            }
+
+            const_iterator    begin   (void) const
+            {
+                _node * node = _root;
+
+                while (node->_left != _sentinel)
+                    node = node->_left;
+                return (const_iterator(node));
+            }
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
                 : _alloc(alloc), _nalloc(alloc), _key_comp(key_comp)
@@ -153,8 +196,8 @@ namespace ft {
             {
                 if (node == _sentinel)
                     return ;
-                _destroy(node->_left);
-                _destroy(node->_right);
+                _destroy(_cast(node->_left));
+                _destroy(_cast(node->_right));
                 _nalloc.destroy(node);
                 _nalloc.deallocate(node, 1);
             }
@@ -242,9 +285,9 @@ namespace ft {
                 {
                     parent = tmp;
                     if (_key_comp(z,tmp->_key))
-                        tmp = tmp->_left;
+                        tmp = _cast(tmp->_left);
                     else
-                        tmp = tmp->_right;
+                        tmp = _cast(tmp->_right);
                 }
                 _node ** node = NULL;
                 if (parent == _sentinel)
@@ -445,6 +488,9 @@ namespace ft {
             Node<T> *           _sentinel;
             Node<T> *           _root;  
             
+            _node *     _cast   (nodeBase * node)
+            {   return (static_cast<_node *>(node));    }
+
             void    insertFixUp(_node * node)
             {
                 while(node->_p->_color == RED)

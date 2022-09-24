@@ -56,9 +56,9 @@ int main()
 	// bst.print();
 	// std::cout << "avant delete" << std::endl;
 
-	bst.deleteNode(80);
-	bst.deleteNode(25);
-	bst.deleteNode(8);
+	// bst.deleteNode(80);
+	// bst.deleteNode(25);
+	// bst.deleteNode(8);
 	// bst.deleteNode(40);
 	// bst.deleteNode(15);
 	// bst.deleteNode(18);
@@ -67,5 +67,11 @@ int main()
 	// bst.deleteNode(17);
 	// bst.deleteNode(81);
 	bst.print();
+
+	RBTree<int>::iterator	it = bst.begin();
+	RBTree<int>::const_iterator	cit = bst.begin();
+
+
+
 	return 0;
 }

@@ -12,13 +12,13 @@ OBJS_DIR_FT			= ft_objs/
 OBJS_DIR_STD		= std_objs/
 
 DEFAULT_FILES		= operator structor member accessor
-SRCS				= $(addsuffix .cpp,		tests_vector)
+SRCS				= $(addsuffix .cpp,		main)
 OBJS_FT				= $(patsubst %.cpp, $(OBJS_DIR_FT)%.o, $(SRCS))
 OBJS_STD			= $(patsubst %.cpp, $(OBJS_DIR_STD)%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)
 
-FT_EXE				= ft_vector
-STD_EXE				= std_vector
+FT_EXE				= ft_containers
+STD_EXE				= std_containers
 
 all					: $(OBJS_DIR_FT) $(OBJS_DIR_STD) $(FT_EXE) $(STD_EXE)
 

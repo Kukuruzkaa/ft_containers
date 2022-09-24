@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/22 17:41:40 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/24 21:52:02 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAP_HPP
 #include <iostream>
 #include "pair.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft {
     template <class Key, class T, class Compare = std::less<Key>,
@@ -23,6 +24,7 @@ namespace ft {
 
         private:
             typedef typename Allocator::template rebind< T >::other _Pair_alloc;
+            typedef RBTree<ft::pair<const Key, T>, Compare, _Pair_alloc>    _Tree;
             
         public:
             // types:
@@ -37,10 +39,11 @@ namespace ft {
             typedef const value_type &                      const_reference;
             typedef typename Allocator::pointer             pointer;
             typedef typename Allocator::const_pointer       const_pointer;
-            // typedef implementation defined iterator; 
-            // typedef implementation defined const_iterator; 
-            // typedef std::reverse_iterator<iterator>         reverse_iterator;
-            // typedef std::reverse_iterator<const_iterator>   const_reverse_iterator;
+            typedef typename _Tree::iterator                iterator;
+            typedef typename _Tree::const_iterator          const_iterator;
+             
+            // typedef ft::reverse_iterator<iterator>          reverse_iterator;
+            // typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
 
             class value_compare : public std::binary_function<value_type,value_type,bool> 
@@ -100,6 +103,7 @@ namespace ft {
             // modifiers:
             // pair<iterator, bool> insert(const value_type& x);
             // iterator insert(iterator position, const value_type& x);
+            
             // template <class InputIterator>
             // void insert(InputIterator first, InputIterator last);     _key_comp;
             
