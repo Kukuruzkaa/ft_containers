@@ -34,15 +34,15 @@ int main()
 
 	// return (0);
 
-	RBTree<int> bst;
-	bst.insertNode(8);
-	bst.insertNode(18);
-	bst.insertNode(5);
-	bst.insertNode(15);
-	bst.insertNode(17);
-	bst.insertNode(25);
-	bst.insertNode(40);
-	bst.insertNode(80);
+	ft::map<int, int> bst;
+	// bst.insertNode(8);
+	// bst.insertNode(18);
+	// bst.insertNode(5);
+	// bst.insertNode(15);
+	// bst.insertNode(17);
+	// bst.insertNode(25);
+	// bst.insertNode(40);
+	// bst.insertNode(80);
 	// bst.insertNode(90);
 	// bst.insertNode(101);
 	// bst.insertNode(3);
@@ -66,10 +66,10 @@ int main()
 	// bst.deleteNode(17);
 	// bst.deleteNode(17);
 	// bst.deleteNode(81);
-	bst.print();
+	// bst.print();
 
-	RBTree<int>::iterator	it = bst.begin();
-	RBTree<int>::const_iterator	cit = bst.begin();
+	map<int, int>::iterator	it = bst.begin();
+	// RBTree<int>::const_iterator	cit = bst.begin();
 
 
 

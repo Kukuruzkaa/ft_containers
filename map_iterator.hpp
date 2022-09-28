@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/24 22:30:29 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/28 21:21:41 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 namespace ft {
     template <typename T> class Node;
-    struct nodeBase;
     
     template<class Value>
     class map_iterator : public
@@ -31,16 +30,15 @@ namespace ft {
             typedef typename _iterator::reference                               reference;
             typedef typename _iterator::pointer                                 pointer;
             typedef typename _iterator::iterator_category                       iterator_category;
-            typedef nodeBase                                                    nodeBase_type;
             typedef Node<value_type>                                            node_type;
             
 
         protected:
-           nodeBase_type *  _node_ptr;
+            node_type*  _node_ptr;
             
         public:
             map_iterator() : _node_ptr(NULL) {}
-            map_iterator(nodeBase_type * node) : _node_ptr(node) {}
+            map_iterator(node_type * node) : _node_ptr(node) {}
             map_iterator(const map_iterator & it) : _node_ptr(it._node_ptr) {}
             // template < typename U >
             // map_iterator (const map_iterator<U> & it) : _node_ptr(it.base()) {}
