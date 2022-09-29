@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/28 21:47:56 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/09/29 20:57:15 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace ft {
             typedef typename Allocator::pointer             pointer;
             typedef typename Allocator::const_pointer       const_pointer;
             typedef typename _Tree::iterator                iterator;
-            // typedef typename _Tree::const_iterator          const_iterator;
+            typedef typename _Tree::const_iterator          const_iterator;
              
             // typedef ft::reverse_iterator<iterator>          reverse_iterator;
             // typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
@@ -81,7 +81,7 @@ namespace ft {
             
             // iterators:
             iterator begin() { return _tree.getMin(); }
-            // const_iterator begin() const;
+            const_iterator begin() const { return _tree.getMin(); }
             // iterator end();
             // const_iterator end() const;
             // reverse_iterator rbegin();
@@ -94,6 +94,11 @@ namespace ft {
             // size_type size() const;
             // size_type max_size() const;
             
+            void    insert  (key_type key, mapped_type mapped)
+            {
+                _tree.insertNode(make_pair(key, mapped));
+            }
+
             // element access:
             T& operator[](const key_type& x)
             {
