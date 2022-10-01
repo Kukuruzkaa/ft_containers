@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/28 21:21:41 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/01 21:16:26 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,16 @@
 
 namespace ft {
     template <typename T> class Node;
+    template <typename T> class map_citerator;
     
     template<class Value>
     class map_iterator : public
         ft::iterator<std::bidirectional_iterator_tag, Value> {
         private:
-            typedef ft::iterator<std::bidirectional_iterator_tag, Value>        _iterator;
+            typedef ft::iterator<std::bidirectional_iterator_tag, typename Value::value_type>  _iterator;
         public:
             typedef map_iterator                                                iterator_type;
-            typedef Value                              value_type;
+            typedef Value                                                       value_type;
             typedef typename _iterator::difference_type                         difference_type;
             typedef typename _iterator::reference                               reference;
             typedef typename _iterator::pointer                                 pointer;
@@ -34,34 +35,29 @@ namespace ft {
             
 
         protected:
-            node_type*  _node_ptr;
+            value_type*  _node_ptr;
             
         public:
             map_iterator() : _node_ptr(NULL) {}
-            map_iterator(node_type * node) : _node_ptr(node) {}
+            map_iterator(value_type * node) : _node_ptr(node) {}
             map_iterator(const map_iterator & it) : _node_ptr(it._node_ptr) {}
-            // template < typename U >
-            // map_iterator (const map_iterator<U> & it) : _node_ptr(it.base()) {}
             map_iterator & operator=(const map_iterator & rhs)
             {
                 _node_ptr = rhs._node_ptr;
                 return *this;
             }
             ~map_iterator() {}
-            
-            // node_type *     base    (void) const
-            // {   return _node_ptr;   }
                 
             reference operator*() const
             {
-                return static_cast<node_type*>(_node_ptr)->_key;
+                return _node_ptr->_key;
             }
             pointer operator->() const {return &(operator*());}
         
             map_iterator& operator++()
             {
-                pointer next_node = _cast()->successor();
-                _node_ptr = next_node;
+                // pointer next_node = _node_ptr->successor()->_key;
+                _node_ptr = _node_ptr->successor();
                 return *this;
                 
             }
@@ -75,8 +71,8 @@ namespace ft {
             
             map_iterator& operator--()
             {
-            pointer prev_node = _cast()->predecessor();
-                _node_ptr = prev_node;
+            // pointer prev_node = _node_ptr->predecessor()->_key;
+                _node_ptr = _node_ptr->predecessor();
                 return *this;
             }
             
@@ -96,9 +92,87 @@ namespace ft {
             {
                 return _node_ptr != rhs._node_ptr;
             }
+
+            operator map_citerator<value_type> (void)
+            {   return (map_citerator<value_type>(_node_ptr));  }
         private:
-            node_type * _cast    (void)
-            {   return (static_cast<node_type *>(_node_ptr));    }
+           value_type * _cast    (void)
+            {   return (static_cast<value_type *>(_node_ptr));    }
+    };
+
+    template<class const_Value>
+    class map_citerator : public
+        ft::iterator<std::bidirectional_iterator_tag, typename const_Value::value_type> {
+        private:
+            typedef ft::iterator<std::bidirectional_iterator_tag, typename const_Value::value_type const>  _const_iterator;
+        public:
+            typedef map_citerator                                               iterator_type;
+            typedef const_Value                                                 value_type;
+            typedef typename _const_iterator::difference_type                   difference_type;
+            typedef typename _const_iterator::reference                         reference;
+            typedef typename _const_iterator::pointer                           pointer;
+            typedef typename _const_iterator::iterator_category                 iterator_category;
+            
+
+        protected:
+            value_type*  _node_ptr;
+            
+        public:
+            map_citerator() : _node_ptr(NULL) {}
+            map_citerator(value_type * node) : _node_ptr(node) {}
+            map_citerator(const map_citerator & cit) : _node_ptr(cit._node_ptr) {}
+            map_citerator & operator=(const map_citerator & rhs)
+            {
+                _node_ptr = rhs._node_ptr;
+                return *this;
+            }
+            ~map_citerator() {}
+                
+            reference operator*() const
+            {
+                return _node_ptr->_key;
+            }
+            pointer operator->() const{return &(operator*());}
+        
+            map_citerator& operator++()
+            {
+                _node_ptr = _node_ptr->successor();
+                return *this;
+                
+            }
+            
+            map_citerator operator++(int)
+            {
+                pointer tmp_node = *this;
+                --*this;
+                return tmp_node;
+            }
+            
+            map_citerator& operator--()
+            {
+                _node_ptr = _node_ptr->predecessor();
+                return *this;
+            }
+            
+            map_citerator operator--(int)
+            {
+            pointer tmp_node = *this;
+                ++*this;
+                return tmp_node;
+            }   
+
+            bool    operator==(const map_citerator & rhs) const
+            {
+                return _node_ptr == rhs._node_ptr;
+            }
+
+            bool    operator!=(const map_citerator & rhs) const
+            {
+                return _node_ptr != rhs._node_ptr;
+            }
+        private:
+            value_type * _cast    (void)
+            {   return (static_cast<value_type *>(_node_ptr));    }
     };
 }
 #endif

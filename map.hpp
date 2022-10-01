@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/29 20:57:15 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/01 22:02:50 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,8 @@ namespace ft {
             typedef typename Allocator::const_pointer       const_pointer;
             typedef typename _Tree::iterator                iterator;
             typedef typename _Tree::const_iterator          const_iterator;
-             
-            // typedef ft::reverse_iterator<iterator>          reverse_iterator;
-            // typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+            typedef ft::reverse_iterator<iterator>          reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
 
             class value_compare : public std::binary_function<value_type,value_type,bool> 
@@ -65,8 +64,8 @@ namespace ft {
                 std::cout << "Default vector constructor" << std::endl;   
             }
             
-            template <class InputIt>
-            map(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& = Allocator());
+            // template <class InputIt>
+            // map(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& = Allocator());
             
             map(const map<Key,T,Compare,Allocator> & src)
                 : _alloc(src._alloc), _key_comp(src._key_comp), _size(src._size) {}
@@ -80,24 +79,25 @@ namespace ft {
             map<Key,T,Compare,Allocator>& operator=(const map<Key,T,Compare,Allocator>& rhs);
             
             // iterators:
-            iterator begin() { return _tree.getMin(); }
-            const_iterator begin() const { return _tree.getMin(); }
-            // iterator end();
-            // const_iterator end() const;
-            // reverse_iterator rbegin();
-            // const_reverse_iterator rbegin() const;
-            // reverse_iterator rend();
-            // const_reverse_iterator rend() const;
+            iterator begin() {return iterator(_tree.getMin());}
+            const_iterator begin() const {return const_iterator(_tree.getMin());}
+            iterator end() {return iterator(_tree.getMax());}
+            const_iterator end() const {return const_iterator(_tree.Max());}
+            reverse_iterator rbegin() {return reverse_iterator(end());}
+            const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
+            reverse_iterator rend() {return reverse_iterator(begin());}
+            const_reverse_iterator rend() const {return const_reverse_iterator(begin());}
             
             // capacity:
-            // bool empty() const;
-            // size_type size() const;
-            // size_type max_size() const;
-            
-            void    insert  (key_type key, mapped_type mapped)
+            bool empty() const
             {
-                _tree.insertNode(make_pair(key, mapped));
+                if(!_size)
+                    return true;
             }
+            
+            size_type size() const {return(_size);}
+            
+            size_type max_size() const {return _alloc.max_size();}
 
             // element access:
             T& operator[](const key_type& x)
@@ -106,12 +106,36 @@ namespace ft {
             }
             
             // modifiers:
-            // pair<iterator, bool> insert(const value_type& x);
+            pair<iterator, bool> insert(const value_type& new_pair)
+            {
+                
+                _tree.insertNode(new_pair);
+                return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), true);
+                
+            }
+            
+            void    print   (void)
+            {
+                _tree.print();
+            }
+
             // iterator insert(iterator position, const value_type& x);
             
             // template <class InputIterator>
-            // void insert(InputIterator first, InputIterator last);     _key_comp;
+            // void insert(InputIterator first, InputIterator last);
             
+            // void erase(iterator position);
+            
+            // size_type erase(const key_type& x);
+            
+            // void erase(iterator first, iterator last);
+            
+            // void swap(multimap<Key,T,Compare,Allocator>&);
+            
+            // void clear();
+            
+            // // observers:
+            key_compare key_comp() const {return _key_comp;}
             // value_compare value_comp() const;
 
             // // map operations:
@@ -125,9 +149,9 @@ namespace ft {
             // const_iterator upper_bound(const key_type& x) const;
             
             // pair<iterator,iterator>
-            //     equal_range(const key_type& x);
+            //     equal_range(const key_type& key);
             // pair<const_iterator,const_iterator>
-            //     qual_range(const key_type& x) const;
+            //     qual_range(const key_type& x) const3;
 
             // template <class Key, class T, class Compare, class Allocator>
             //     bool operator==(const map<Key,T,Compare,Allocator>& x,

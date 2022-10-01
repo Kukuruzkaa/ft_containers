@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/28 21:45:46 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/01 22:26:46 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ namespace ft {
                 Node * node = parent->_left;
                 
                 if (node != node->_left)
-                    return TreeMax(node);
+                    return node->_left->TreeMax();
                 while (parent != parent->_left && node->_p == parent->_left)
                 {
                     node->_p = parent;
@@ -129,7 +129,8 @@ namespace ft {
             typedef Allocator           allocator_type;
             typedef Compare             key_compare;
             typedef Node<T>             _node;
-            typedef map_iterator<T>     iterator;
+            typedef map_iterator<_node>     iterator;
+            typedef map_citerator<_node>    const_iterator;
       
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
@@ -161,6 +162,11 @@ namespace ft {
             }
 
             _node * getMin()
+            {
+                return _root->TreeMin();
+            }
+
+            _node * getMin() const
             {
                 return _root->TreeMin();
             }
@@ -213,11 +219,15 @@ namespace ft {
                 InorderTreeWalk(node->_right);
             }
 
+            _node  * TreeSearch(value_type key)
+            {
+                return (TreeSearch(_root, key));
+            }
             _node  * TreeSearch(_node * node, value_type key)
             {
                 if (node == _sentinel || key == node->_key)
                     return node;
-                if (_key_comp(key, node->_key))
+                if (_key_comp(key.first, node->_key.first))
                     return TreeSearch(node->_left, key);
                 return TreeSearch(node->_right, key);
             }
@@ -226,7 +236,7 @@ namespace ft {
             {
                 while (node != _sentinel && key != node->_key)
                 {
-                    if (_key_comp(key, node->_key))
+                    if (_key_comp(key.first, node->_key.first))
                         node = node->_left;
                     node = node->_right;
                 }
@@ -252,15 +262,17 @@ namespace ft {
                 while(tmp != _sentinel)
                 {
                     parent = tmp;
-                    if (_key_comp(z,tmp->_key))
+                    if (_key_comp(z.first, tmp->_key.first)) // if z < tmp
                         tmp = tmp->_left;
-                    else
+                    else if (_key_comp(tmp->_key.first, z.first)) // if z > tmp
                         tmp = tmp->_right;
+                    else // z == tmp
+                        return ;
                 }
                 _node ** node = NULL;
                 if (parent == _sentinel)
                     node = &_root;
-                else if (_key_comp(parent->_key ,tmp->_key))
+                else if (_key_comp(parent->_key.first ,tmp->_key.first))
                     node = &parent->_left;
                 else  
                     node = &parent->_right;
@@ -272,7 +284,7 @@ namespace ft {
 
             void    deleteNode(value_type key)
             {
-                _node * z = TreeSearch(_root, key);
+                _node * z = TreeSearch(key);
                 _node * y, * x;
                 if (z == _sentinel)
                     return ;
