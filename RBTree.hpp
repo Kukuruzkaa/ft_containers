@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/01 22:26:46 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/01 22:31:07 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ namespace ft {
                 v->_p = u->_p;
             }
 
-            void    insertNode(value_type z)
+            bool    insertNode(value_type z)
             {
                 _node * parent = _sentinel;
                 _node * tmp = _root;
@@ -267,7 +267,7 @@ namespace ft {
                     else if (_key_comp(tmp->_key.first, z.first)) // if z > tmp
                         tmp = tmp->_right;
                     else // z == tmp
-                        return ;
+                        return false;
                 }
                 _node ** node = NULL;
                 if (parent == _sentinel)
@@ -280,6 +280,7 @@ namespace ft {
                 *node = _nalloc.allocate(1);
                 _nalloc.construct(*node, temp);
                 insertFixUp(*node);
+                return true;
             }
 
             void    deleteNode(value_type key)

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/01 22:02:50 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/01 22:32:32 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,13 @@ namespace ft {
             
             // modifiers:
             pair<iterator, bool> insert(const value_type& new_pair)
-            {
+            { 
+                // bool    b = _tree.insertNode(new_pair);
                 
-                _tree.insertNode(new_pair);
-                return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), true);
-                
+                // return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), b);
+                if (_tree.insertNode(new_pair))
+                    return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), true);
+                return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), false);
             }
             
             void    print   (void)
