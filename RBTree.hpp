@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/01 22:31:07 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/03 23:14:53 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,38 @@ namespace ft {
 
             Node  * successor(void)
             {
-                Node * parent = this;
-                Node * node = parent->_right;
+                Node * parent = this->_p;
+                Node * node = this;
                 
-                if (node != node->_right)
-                    return TreeMin(node);
+                if (node->_right != node->_right->_right)
+                    return node->_right->TreeMin();
+                while (parent != parent->_left && node == parent->_right)
+                {
+                    node = parent;
+                    parent = parent->_p;
+                }
                 return parent;
             }
 
+            // TREE-SUCCESSOR.x/
+            // 1 if x:right != NIL
+            // 2 return TREE-MINIMUM.x:right/
+            // 3 y D x:p
+            // 4 while y ¤ NIL and x == y:right
+            // 5 x D y
+            // 6 y D y:p
+            // 7 return y
+
             Node  *  predecessor(void)
             {
-                Node * parent = this;
-                Node * node = parent->_left;
+                Node * parent = this->_p;
+                Node * node = this;
                 
-                if (node != node->_left)
+                if (node->_left != node->_left->_left)
                     return node->_left->TreeMax();
-                while (parent != parent->_left && node->_p == parent->_left)
+                while (parent != parent->_left && node == parent->_left)
                 {
-                    node->_p = parent;
+                    node = parent;
                     parent = parent->_p;
                 }
                 return parent;
@@ -219,28 +233,29 @@ namespace ft {
                 InorderTreeWalk(node->_right);
             }
 
-            _node  * TreeSearch(value_type key)
+            
+            _node * &   TreeSearch(value_type key)
             {
-                return (TreeSearch(_root, key));
-            }
-            _node  * TreeSearch(_node * node, value_type key)
-            {
-                if (node == _sentinel || key == node->_key)
-                    return node;
-                if (_key_comp(key.first, node->_key.first))
-                    return TreeSearch(node->_left, key);
-                return TreeSearch(node->_right, key);
+                _node * parent = _sentinel;
+                return (TreeSearch(key, parent));
             }
 
-            _node  *    IterTreeSearch(_node * node, value_type key)
+            _node * &   TreeSearch(value_type key, _node * & parent)
             {
-                while (node != _sentinel && key != node->_key)
+                _node **    node = &_root;
+                if (parent != _sentinel)
+                    node = &parent;
+                while(*node != _sentinel)
                 {
-                    if (_key_comp(key.first, node->_key.first))
-                        node = node->_left;
-                    node = node->_right;
+                    parent = *node;
+                    if (_key_comp(key.first, (*node)->_key.first)) // if key < node
+                        node = &(*node)->_left;
+                    else if (_key_comp((*node)->_key.first, key.first)) // if z > node
+                        node = &(*node)->_right;
+                    else // z == tmp
+                        return *node;
                 }
-                return node;
+                return (*node);
             }
 
             void    transplant(_node * u, _node * v)
@@ -256,30 +271,25 @@ namespace ft {
 
             bool    insertNode(value_type z)
             {
-                _node * parent = _sentinel;
-                _node * tmp = _root;
-                
-                while(tmp != _sentinel)
-                {
-                    parent = tmp;
-                    if (_key_comp(z.first, tmp->_key.first)) // if z < tmp
-                        tmp = tmp->_left;
-                    else if (_key_comp(tmp->_key.first, z.first)) // if z > tmp
-                        tmp = tmp->_right;
-                    else // z == tmp
-                        return false;
-                }
-                _node ** node = NULL;
-                if (parent == _sentinel)
-                    node = &_root;
-                else if (_key_comp(parent->_key.first ,tmp->_key.first))
-                    node = &parent->_left;
-                else  
-                    node = &parent->_right;
+                return (insertNode(z, _sentinel));
+            }
+
+            bool    insertNode(value_type z, iterator pos)
+            {
+                _node * parent = pos._node_ptr;
+                _node * & node = TreeSearch(z, parent);
+
+                return (insertNode(z, node, parent));
+            }
+
+            bool    insertNode(value_type z, _node * & node, _node * parent)
+            {
+                if (node != _sentinel)
+                    return false;
                 _node   temp(z, parent, _sentinel, _sentinel, 1);
-                *node = _nalloc.allocate(1);
-                _nalloc.construct(*node, temp);
-                insertFixUp(*node);
+                node = _nalloc.allocate(1);
+                _nalloc.construct(node, temp);
+                insertFixUp(node);
                 return true;
             }
 

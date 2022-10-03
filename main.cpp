@@ -36,14 +36,43 @@ int main()
 
 	// return (0);
 
+	// ft::map<int, int> bst;
+	// for (int i = 1; i < 10000000; ++i)
+	// {
+	// 	bst.insert(make_pair(i, i));
+	// }
+
 	ft::map<int, int> bst;
-	bst.insert(make_pair(1, 2));
-	bst.insert(make_pair(2, 7));
-	bst.insert(make_pair(2, 8));
+	ft::map<int, int>::iterator	it = bst.begin();
+	for (int i = 1; i < 10; ++i)
+	{
+		it = bst.insert(it, make_pair(i, i));
+		// bst.print();
+	}
+	it = bst.begin();
+	++it;
 	bst.print();
+
+	while (it != bst.end())
+	{
+		std::cout	<< *it
+					<< std::endl;
+		++it;
+	}
+	ft::map<int, int> bst2;
+	bst2.insert(++(++(++(++(++(++(++bst.begin())))))), bst.end());	
+	bst2.print();
+
+	while (it != bst.begin())
+	{
+		std::cout	<< *it
+					<< std::endl;
+		--it;
+	}
+	
 	// bst.insertNode(8);
 	// bst.insertNode(18);
-	// bst.insertNode(5);
+	// bst.insertNode(5);6
 	// bst.insertNode(15);
 	// bst.insertNode(17);
 	// bst.insertNode(25);
@@ -74,26 +103,26 @@ int main()
 	// bst.deleteNode(81);
 	// bst.print();
 
-	map<int, int>::iterator	it = bst.begin();
-	map<int, int>::const_iterator cit = bst.begin();
-	map<int, int>::iterator ite = bst.end();
-	map<int, int>::const_iterator cite = bst.end();
+	// map<int, int>::iterator	it = bst.begin();
+	// map<int, int>::const_iterator cit = bst.begin();
+	// map<int, int>::iterator ite = bst.end();
+	// map<int, int>::const_iterator cite = bst.end();
 
-	map<int, int>::reverse_iterator	rit = bst.rbegin();
-	map<int, int>::const_reverse_iterator rcit = bst.rbegin();
-	map<int, int>::reverse_iterator rite = bst.rend();
-	map<int, int>::const_reverse_iterator rcite = bst.rend();
+	// map<int, int>::reverse_iterator	rit = bst.rbegin();
+	// map<int, int>::const_reverse_iterator rcit = bst.rbegin();
+	// map<int, int>::reverse_iterator rite = bst.rend();
+	// map<int, int>::const_reverse_iterator rcite = bst.rend();
 
 	
-	// (*it).second = 4;
-	PRINT((*it).second);
-	PRINT((*cit).first);
-	PRINT((*ite).second);
-	PRINT((*cite).first);
-	PRINT((*rit).second);
-	PRINT((*rcit).first);
-	PRINT((*rite).second);
-	PRINT((*rcite).first);
+	// // (*it).second = 4;
+	// PRINT((*it).second);
+	// PRINT((*cit).first);
+	// PRINT((*ite).second);
+	// PRINT((*cite).first);
+	// PRINT((*rit).second);
+	// PRINT((*rcit).first);
+	// PRINT((*rite).second);
+	// PRINT((*rcite).first);
 
 	// std::cout	<< __LINE__
 	// 			<< std::endl

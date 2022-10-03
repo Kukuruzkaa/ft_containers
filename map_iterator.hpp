@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/01 21:16:26 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/03 23:00:32 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ namespace ft {
             typedef Node<value_type>                                            node_type;
             
 
-        protected:
+        public:
+        // protected:
             value_type*  _node_ptr;
             
-        public:
+        // public:
             map_iterator() : _node_ptr(NULL) {}
             map_iterator(value_type * node) : _node_ptr(node) {}
             map_iterator(const map_iterator & it) : _node_ptr(it._node_ptr) {}
@@ -64,8 +65,8 @@ namespace ft {
             
             map_iterator operator++(int)
             {
-                pointer tmp_node = *this;
-                --*this;
+                map_iterator tmp_node = *this;
+                ++(*this);
                 return tmp_node;
             }
             
@@ -78,8 +79,8 @@ namespace ft {
             
             map_iterator operator--(int)
             {
-            pointer tmp_node = *this;
-                ++*this;
+                map_iterator tmp_node = *this;
+                --*this;
                 return tmp_node;
             }   
 
