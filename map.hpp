@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/03 23:02:28 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/04 20:41:36 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,7 @@ namespace ft {
             // capacity:
             bool empty() const
             {
-                if(!_size)
-                    return true;
+                return _tree.getRoot() == _tree.getSentinel();    
             }
             
             size_type size() const {return(_size);}
@@ -135,17 +134,30 @@ namespace ft {
             {
                 while (first != last)
                 {
-                    // std::cout   << "t1\n";
                     insert(*first);
                     ++first;
                 }
             }
             
-            // void erase(iterator position);
+            // void erase(iterator position)
+            // {
+                
+            // }
             
-            // size_type erase(const key_type& x);
+            // size_type erase(const key_type& x)
+            // {
+                
+            //     return 1;
+            // }
             
-            // void erase(iterator first, iterator last);
+            // void erase(iterator first, iterator last)
+            // {
+            //     while (first != last)
+            //     {
+            //         erase(*first);
+            //         ++first;
+            //     }
+            // }
             
             // void swap(multimap<Key,T,Compare,Allocator>&);
             
@@ -156,8 +168,17 @@ namespace ft {
             // value_compare value_comp() const;
 
             // // map operations:
-            // iterator find(const key_type& x);
-            // const_iterator find(const key_type& x) const;
+            iterator find(const key_type& key)
+            {
+                value_type new_pair = make_pair(key, mapped_type());
+                return iterator(_tree.TreeSearch(new_pair));
+            }
+            
+            const_iterator find(const key_type& key) const
+            {
+                return const_iterator(find(key));
+            }
+            
             // size_type count(const key_type& x) const;
             
             // iterator lower_bound(const key_type& x);

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/03 23:14:53 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/04 20:20:40 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,6 @@ namespace ft {
                 }
                 return parent;
             }
-
-            // TREE-SUCCESSOR.x/
-            // 1 if x:right != NIL
-            // 2 return TREE-MINIMUM.x:right/
-            // 3 y D x:p
-            // 4 while y ¤ NIL and x == y:right
-            // 5 x D y
-            // 6 y D y:p
-            // 7 return y
 
             Node  *  predecessor(void)
             {
@@ -175,20 +166,13 @@ namespace ft {
                 _nalloc.deallocate(node, 1);
             }
 
-            _node * getMin()
-            {
-                return _root->TreeMin();
-            }
+            _node * getMin() {return _root->TreeMin();}
 
-            _node * getMin() const
-            {
-                return _root->TreeMin();
-            }
+            _node * getMax() {return _root->TreeMax();}
 
-             _node * getMax()
-            {
-                return _root->TreeMax();
-            }
+            _node * getRoot() {return _root;}
+
+            _node * getSentinel() {return _sentinel;}
             
             void    leftRotation(_node * x)
             {
@@ -234,13 +218,13 @@ namespace ft {
             }
 
             
-            _node * &   TreeSearch(value_type key)
+            _node * &   TreeSearch(value_type val)
             {
                 _node * parent = _sentinel;
-                return (TreeSearch(key, parent));
+                return (TreeSearch(val, parent));
             }
 
-            _node * &   TreeSearch(value_type key, _node * & parent)
+            _node * &   TreeSearch(value_type val, _node * & parent)
             {
                 _node **    node = &_root;
                 if (parent != _sentinel)
@@ -248,11 +232,11 @@ namespace ft {
                 while(*node != _sentinel)
                 {
                     parent = *node;
-                    if (_key_comp(key.first, (*node)->_key.first)) // if key < node
+                    if (_key_comp(val.first, (*node)->_key.first)) // if val < node
                         node = &(*node)->_left;
-                    else if (_key_comp((*node)->_key.first, key.first)) // if z > node
+                    else if (_key_comp((*node)->_key.first, val.first)) // if val > node
                         node = &(*node)->_right;
-                    else // z == tmp
+                    else // val == tmp
                         return *node;
                 }
                 return (*node);
@@ -293,9 +277,9 @@ namespace ft {
                 return true;
             }
 
-            void    deleteNode(value_type key)
+            void    deleteNode(value_type val)
             {
-                _node * z = TreeSearch(key);
+                _node * z = TreeSearch(val);
                 _node * y, * x;
                 if (z == _sentinel)
                     return ;
