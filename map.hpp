@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/04 20:41:36 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/04 21:40:27 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "pair.hpp"
 #include "reverse_iterator.hpp"
 #include "type_traits.hpp"
+#include "RBTree.hpp"
 
 namespace ft {
     template <class Key, class T, class Compare = std::less<Key>,
@@ -65,8 +66,12 @@ namespace ft {
                 std::cout << "Default vector constructor" << std::endl;   
             }
             
-            // template <class InputIt>
-            // map(InputIt first, InputIt last, const Compare& comp = Compare(), const Allocator& = Allocator());
+            template <class InputIt>
+            map(InputIt first, InputIt last, const key_compare & key_comp = key_compare(), const allocator_type & alloc = allocator_type())
+                : _alloc(alloc), _key_comp(key_comp), _size(0)
+            {
+                insert(first, last);
+            }
             
             map(const map<Key,T,Compare,Allocator> & src)
                 : _alloc(src._alloc), _key_comp(src._key_comp), _size(src._size) {}
@@ -83,7 +88,7 @@ namespace ft {
             iterator begin() {return iterator(_tree.getMin());}
             const_iterator begin() const {return const_iterator(_tree.getMin());}
             iterator end() {return iterator(_tree.getMax());}
-            const_iterator end() const {return const_iterator(_tree.Max());}
+            const_iterator end() const {return const_iterator(_tree.getMax());}
             reverse_iterator rbegin() {return reverse_iterator(end());}
             const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
             reverse_iterator rend() {return reverse_iterator(begin());}
@@ -112,7 +117,10 @@ namespace ft {
                 
                 // return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), b);
                 if (_tree.insertNode(new_pair))
+                {
                     return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), true);
+                    ++_size;
+                }
                 return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), false);
             }
             
@@ -139,27 +147,33 @@ namespace ft {
                 }
             }
             
-            // void erase(iterator position)
-            // {
-                
-            // }
+            void erase(iterator position)
+            {
+                if (position != end())
+                {
+                    _tree.deleteNode(*position);
+                    --_size;
+                }
+            }
             
-            // size_type erase(const key_type& x)
-            // {
-                
-            //     return 1;
-            // }
+            size_type erase(const key_type& key)
+            {
+                iterator it = find(key);
+                if (it == end())
+                    return 0;
+                erase(it);
+                return 1;
+            }
             
-            // void erase(iterator first, iterator last)
-            // {
-            //     while (first != last)
-            //     {
-            //         erase(*first);
-            //         ++first;
-            //     }
-            // }
+            void erase(iterator first, iterator last)
+            {
+                while (first != last)
+                {
+                    erase(*first);
+                    ++first;
+                }
+            }
             
-            // void swap(multimap<Key,T,Compare,Allocator>&);
             
             // void clear();
             
@@ -221,8 +235,6 @@ namespace ft {
             size_t                                              _size;
             RBTree<value_type, key_compare, allocator_type>     _tree;
             
-        
-        
     };
         // specialized algorithms:
     template <class Key, class T, class Compare, class Allocator>

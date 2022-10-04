@@ -44,7 +44,7 @@ int main()
 
 	ft::map<int, int> bst;
 	ft::map<int, int>::iterator	it = bst.begin();
-	ft::map<int, int>::const_iterator cit = bst.begin();
+	// ft::map<int, int>::const_iterator cit = bst.begin();
 	for (int i = 1; i < 10; ++i)
 	{
 		it = bst.insert(it, make_pair(i, i));
@@ -71,8 +71,11 @@ int main()
 		--it;
 	}
 
-	cit = bst2.find(1);
-	PRINT(cit->first);
+	it = bst2.find(1);
+	PRINT(it->first);
+
+	bst2.erase(it);
+	bst2.print();
 
 	
 	// bst.insertNode(8);

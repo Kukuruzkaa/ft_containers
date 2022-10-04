@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/04 20:20:40 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/04 21:39:54 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,11 @@ namespace ft {
 
             _node * getMin() {return _root->TreeMin();}
 
+            _node * getMin() const {return _root->TreeMin();}
+
             _node * getMax() {return _root->TreeMax();}
+
+            _node * getMax() const {return _root->TreeMax();}
 
             _node * getRoot() {return _root;}
 
