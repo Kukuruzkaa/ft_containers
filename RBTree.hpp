@@ -64,6 +64,9 @@ namespace ft {
                 Node * parent = this->_p;
                 Node * node = this;
                 
+                if (node == node->_left)
+                    return parent->TreeMax();
+
                 if (node->_right != node->_right->_right)
                     return node->_right->TreeMin();
                 while (parent != parent->_left && node == parent->_right)

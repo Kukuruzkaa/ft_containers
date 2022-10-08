@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 17:38:04 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 21:59:40 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ namespace ft {
         public:
             map_citerator() : _node_ptr(NULL) {}
             map_citerator(value_type * node) : _node_ptr(node) {}
+            map_citerator(const map_iterator<value_type> & it) : _node_ptr(it._node_ptr) {}
             map_citerator(const map_citerator & cit) : _node_ptr(cit._node_ptr) {}
             map_citerator & operator=(const map_citerator & rhs)
             {
@@ -159,14 +160,14 @@ namespace ft {
                 return tmp_node;
             }   
 
-            bool    operator==(const map_citerator & rhs) const
+            friend bool    operator==(const map_citerator & lhs, const map_citerator & rhs)
             {
-                return (_node_ptr == rhs._node_ptr);
+                return (lhs._node_ptr == rhs._node_ptr);
             }
 
-            bool    operator!=(const map_citerator & rhs) const
+            friend bool    operator!=(const map_citerator & lhs, const map_citerator & rhs)
             {
-                return (_node_ptr != rhs._node_ptr);
+                return (lhs._node_ptr != rhs._node_ptr);
             }
     };
 }
