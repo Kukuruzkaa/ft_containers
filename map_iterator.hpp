@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/03 23:00:32 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 17:38:04 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ namespace ft {
             
             map_iterator& operator--()
             {
-            // pointer prev_node = _node_ptr->predecessor()->_key;
+                // pointer prev_node = _node_ptr->predecessor()->_key;
                 _node_ptr = _node_ptr->predecessor();
                 return *this;
             }
@@ -80,7 +80,7 @@ namespace ft {
             map_iterator operator--(int)
             {
                 map_iterator tmp_node = *this;
-                --*this;
+                --(*this);
                 return tmp_node;
             }   
 
@@ -96,9 +96,6 @@ namespace ft {
 
             operator map_citerator<value_type> (void)
             {   return (map_citerator<value_type>(_node_ptr));  }
-        private:
-           value_type * _cast    (void)
-            {   return (static_cast<value_type *>(_node_ptr));    }
     };
 
     template<class const_Value>
@@ -144,8 +141,8 @@ namespace ft {
             
             map_citerator operator++(int)
             {
-                pointer tmp_node = *this;
-                --*this;
+                map_citerator tmp_node = *this;
+                ++(*this);
                 return tmp_node;
             }
             
@@ -157,23 +154,20 @@ namespace ft {
             
             map_citerator operator--(int)
             {
-            pointer tmp_node = *this;
-                ++*this;
+                map_citerator   tmp_node = *this;
+                --(*this);
                 return tmp_node;
             }   
 
             bool    operator==(const map_citerator & rhs) const
             {
-                return _node_ptr == rhs._node_ptr;
+                return (_node_ptr == rhs._node_ptr);
             }
 
             bool    operator!=(const map_citerator & rhs) const
             {
-                return _node_ptr != rhs._node_ptr;
+                return (_node_ptr != rhs._node_ptr);
             }
-        private:
-            value_type * _cast    (void)
-            {   return (static_cast<value_type *>(_node_ptr));    }
     };
 }
 #endif

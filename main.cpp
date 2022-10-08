@@ -42,40 +42,101 @@ int main()
 	// 	bst.insert(make_pair(i, i));
 	// }
 
-	ft::map<int, int> bst;
-	ft::map<int, int>::iterator	it = bst.begin();
-	// ft::map<int, int>::const_iterator cit = bst.begin();
-	for (int i = 1; i < 10; ++i)
-	{
-		it = bst.insert(it, make_pair(i, i));
-		// bst.print();
-	}
-	it = bst.begin();
-	++it;
-	bst.print();
+	// ft::map<int, int> bst;
+	// ft::map<int, int>::iterator	it = bst.begin(),
+	// 							it2 = it;
+	// // ft::map<int, int>::const_iterator cit = bst.begin();
+	// for (int i = 1; i < 10; ++i)
+	// {
+	// 	it = bst.insert(it, make_pair(i, i));
+	// 	// bst.print();
+	// }
+	// it = bst.begin();
+	// it2 = it;
+	// ++it;
+	// bst.print();
 
-	while (it != bst.end())
-	{
-		std::cout	<< *it
-					<< std::endl;
-		++it;
-	}
-	ft::map<int, int> bst2;
-	bst2.insert(bst.begin(), bst.end());	
-	bst2.print();
+	// while (it != bst.end())
+	// {
+	// 	std::cout	<< *it
+	// 				<< std::endl;
+	// 	it2 = it;
+	// 	++it;
+	// }
+	// ft::map<int, int> bst2;
+	// bst2.insert(bst.begin(), bst.find(4));	
+	// bst2.print();
 
-	while (it != bst.begin())
-	{
-		std::cout	<< *it
-					<< std::endl;
-		--it;
-	}
+	ft::map<char,int> mymap;
 
-	it = bst2.find(1);
-	PRINT(it->first);
+  // first insert function version (single parameter):
+	
+  	mymap.insert ( pair<char,int>('a',100) );
+  	mymap.insert ( pair<char,int>('z',200) );
 
-	bst2.erase(it);
-	bst2.print();
+	mymap.print();
+
+  	ft::map<char,int>::iterator it = mymap.begin();
+	mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
+  	mymap.print();
+	mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
+
+	mymap.print();
+
+//   	ft::pair<map<char,int>::iterator,bool> ret;
+//   	ret = mymap.insert ( pair<char,int>('z',500) );
+//   	if (ret.second==false)
+// 	{
+//     	std::cout << "element 'z' already exists";
+//     	std::cout << " with a value of " << ret.first->second << '\n';
+//   	}
+
+//   // second insert function version (with hint position):
+//   	ft::map<char,int>::iterator it = mymap.begin();
+// 	mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
+//   	mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
+
+//   // third insert function version (range insertion):
+//   	ft::map<char,int> anothermap;
+//   	anothermap.insert(mymap.begin(),mymap.find('c'));
+
+//   // showing contents:
+//   	std::cout << "mymap contains:\n";
+//   	for (it=mymap.begin(); it!=mymap.end(); ++it)
+//     	std::cout << it->first << " => " << it->second << '\n';
+
+//   // cout  << "map size == "
+//   //       << anothermap.size()
+//   //       << std::endl;
+//   	for (it = mymap.begin(); it != mymap.find('c'); ++it)
+//       	std::cout  << "(" << it->first << ":" << it->second << ")" << std::endl;
+//   	std::cout << "anothermap contains:\n";
+// 	for (it=anothermap.begin(); it!=anothermap.end(); ++it)
+//     	std::cout << it->first << " => " << it->second << '\n';
+
+// 	mymap.print();
+
+	// while (it2 != bst.begin())
+	// {
+	// 	std::cout	<< *it2
+	// 				<< std::endl;
+	// 	--it2;
+	// }
+
+	// it = bst2.find(1);
+	// PRINT(it->first);
+
+	// bst2.test();
+
+	// __attribute__((unused)) size_t	size = bst.count(17);
+	// PRINT(bst.find(4)->first);
+
+	
+
+	// bst2.erase(it);
+	// bst2.print();
+	// bst2.clear();
+	// bst2.print();
 
 	
 	// bst.insertNode(8);

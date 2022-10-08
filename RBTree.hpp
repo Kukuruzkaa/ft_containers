@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/04 21:39:54 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 19:37:24 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ namespace ft {
             Node *           _right;
             bool             _color;
 
+
             Node  * successor(void)
             {
                 Node * parent = this->_p;
@@ -78,6 +79,9 @@ namespace ft {
                 Node * parent = this->_p;
                 Node * node = this;
                 
+                if (node == node->_left)
+                    return parent->TreeMax();
+                    
                 if (node->_left != node->_left->_left)
                     return node->_left->TreeMax();
                 while (parent != parent->_left && node == parent->_left)
@@ -144,13 +148,17 @@ namespace ft {
                 _sentinel = _nalloc.allocate(1);
                 _node   tmp(value_type(), _sentinel, _sentinel, _sentinel, BLACK);
                 tmp._color = BLACK;
+                #ifdef __DEBUG__
                 std::cout << "RBTree constructor" << std::endl;
+                #endif
                 _nalloc.construct(_sentinel, tmp);
                 _root = _sentinel;
             }
             ~RBTree()
             {
+                #ifdef __DEBUG__
                 std::cout << "RBTree destructor" << std::endl;
+                #endif
                 _nalloc.destroy(_sentinel);
                 _nalloc.deallocate(_sentinel, 1);
                 _destroy(_root);
@@ -162,10 +170,20 @@ namespace ft {
                     return ;
                 _destroy(node->_left);
                 _destroy(node->_right);
+                if (node == _root)
+                    _root = _sentinel;
                 _nalloc.destroy(node);
                 _nalloc.deallocate(node, 1);
             }
 
+            void    test    (void) const
+            {
+                std::cout   << _sentinel
+                            << std::endl
+                            << _sentinel->_p
+                            << std::endl;
+            }
+            
             _node * getMin() {return _root->TreeMin();}
 
             _node * getMin() const {return _root->TreeMin();}
@@ -176,7 +194,11 @@ namespace ft {
 
             _node * getRoot() {return _root;}
 
+            _node * getRoot() const {return _root;}
+
             _node * getSentinel() {return _sentinel;}
+            
+            _node * getSentinel() const {return _sentinel;}
             
             void    leftRotation(_node * x)
             {
@@ -228,9 +250,58 @@ namespace ft {
                 return (TreeSearch(val, parent));
             }
 
+            &1 == _root
+            &2 == tmp
+
             _node * &   TreeSearch(value_type val, _node * & parent)
             {
                 _node **    node = &_root;
+                if (parent != _sentinel)
+                {
+                    node = &parent;
+                    _node ** tmp = &(*node)->_p;
+                    while (*tmp_parent != _sentinel &&
+                            (((*node)->_p->_left == *node && _key_comp((*tmp_parent)->_key.first, val.first)) ||
+                            ((*node)->_p->_right == *node && _key_comp(val.first, (*tmp_parent)->_key.first))))
+                    {
+                        node = tmp_parent;
+                        tmp_parent = &(*node)->_p;
+                    }
+                }
+                while(*node != _sentinel)
+                {
+                    parent = *node;
+                    if (_key_comp(val.first, (*node)->_key.first)) // if val < node
+                        node = &(*node)->_left;
+                    else if (_key_comp((*node)->_key.first, val.first)) // if val > node
+                        node = &(*node)->_right;
+                    else // val == tmp
+                        return *node;
+                }
+                return (*node);
+            }
+
+            _node * const   TreeSearch(value_type val) const
+            {
+                _node * parent = _sentinel;
+                return (TreeSearch(val, parent));
+            }
+
+            _node * const   TreeSearch(value_type val, _node * & parent) const
+            {
+                _node * const *    node = &_root;
+                if (parent != _sentinel)
+                {
+                    node = &parent;
+                    _node ** tmp = &(*node)->_p;
+                    while (*tmp != _sentinel &&
+                            (((*node)->_p->_left == *node && _key_comp((*tmp)->_key.first, val.first)) ||
+                            ((*node)->_p->_right == *node && _key_comp(val.first, (*tmp)->_key.first))))
+                    {
+                        node = tmp;
+                        tmp = &(*node)->_p;
+                    }
+                }
                 if (parent != _sentinel)
                     node = &parent;
                 while(*node != _sentinel)
@@ -278,6 +349,7 @@ namespace ft {
                 node = _nalloc.allocate(1);
                 _nalloc.construct(node, temp);
                 insertFixUp(node);
+                _sentinel->_p = _root;
                 return true;
             }
 
@@ -322,6 +394,7 @@ namespace ft {
                     deleteFixUp(x);
                 _nalloc.destroy(z);
                 _nalloc.deallocate(z, 1);
+                _sentinel->_p = _root;
             }
             
             void printHelper(_node * root, std::string indent, bool last) 
