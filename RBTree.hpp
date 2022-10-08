@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 19:49:44 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 21:22:59 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ namespace ft {
             typedef map_iterator<_node>     iterator;
             typedef map_citerator<_node>    const_iterator;
       
+            size_t  max_size    (void) const
+            {   return (_nalloc.max_size());    }
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
                 : _alloc(alloc), _nalloc(alloc), _key_comp(key_comp)

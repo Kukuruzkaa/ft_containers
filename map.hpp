@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 19:04:56 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 21:23:09 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,12 @@ namespace ft {
             
             size_type size() const {return(_size);}
             
-            size_type max_size() const {return _alloc.max_size();}
+            size_type max_size() const {return _tree.max_size();}
 
             // element access:
             T& operator[](const key_type& x)
             {
-                return ((insert(make_pair(x, T()))).first)->second;
+                return ((insert(ft::make_pair(x, T()))).first)->second;
             }
             
             // modifiers:
@@ -187,8 +187,7 @@ namespace ft {
                 {
                     iterator tmp = first;
                     ++tmp;
-                    erase(*first);
-                    // ++first;
+                    erase(first);
                     first = tmp;
                 }
             }
@@ -212,13 +211,13 @@ namespace ft {
             // // map operations:
             iterator find(const key_type& key)
             {
-                value_type new_pair = make_pair(key, mapped_type());
+                value_type new_pair = ft::make_pair(key, mapped_type());
                 return iterator(_tree.TreeSearch(new_pair));
             }
             
             const_iterator find(const key_type& key) const
             {
-                value_type new_pair = make_pair(key, mapped_type());
+                value_type new_pair = ft::make_pair(key, mapped_type());
                 return const_iterator(_tree.TreeSearch(new_pair));
             }
             
