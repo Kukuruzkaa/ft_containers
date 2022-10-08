@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 19:37:24 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/08 19:49:44 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,16 +250,13 @@ namespace ft {
                 return (TreeSearch(val, parent));
             }
 
-            &1 == _root
-            &2 == tmp
-
             _node * &   TreeSearch(value_type val, _node * & parent)
             {
                 _node **    node = &_root;
                 if (parent != _sentinel)
                 {
                     node = &parent;
-                    _node ** tmp = &(*node)->_p;
+                    _node ** tmp_parent = &(*node)->_p;
                     while (*tmp_parent != _sentinel &&
                             (((*node)->_p->_left == *node && _key_comp((*tmp_parent)->_key.first, val.first)) ||
                             ((*node)->_p->_right == *node && _key_comp(val.first, (*tmp_parent)->_key.first))))
