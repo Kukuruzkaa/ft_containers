@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 21:22:59 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/09 18:24:34 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,15 +137,12 @@ namespace ft {
             typedef typename Allocator::template rebind<Node<T> >::other    _Node_alloc;
             
         public:
-            typedef T                   value_type;
-            typedef Allocator           allocator_type;
-            typedef Compare             key_compare;
-            typedef Node<T>             _node;
+            typedef T                       value_type;
+            typedef Allocator               allocator_type;
+            typedef Compare                 key_compare;
+            typedef Node<T>                 _node;
             typedef map_iterator<_node>     iterator;
             typedef map_citerator<_node>    const_iterator;
-      
-            size_t  max_size    (void) const
-            {   return (_nalloc.max_size());    }
             
             RBTree(const allocator_type & alloc = allocator_type(), const key_compare & key_comp = key_compare())
                 : _alloc(alloc), _nalloc(alloc), _key_comp(key_comp)
@@ -159,6 +156,38 @@ namespace ft {
                 _nalloc.construct(_sentinel, tmp);
                 _root = _sentinel;
             }
+
+            RBTree(const RBTree & src)
+                :_alloc(src._alloc), _nalloc(src._nalloc), _key_comp(src._key_comp)
+            {
+                iterator it = src.getMin();
+                iterator ite = src._sentinel;
+                
+                _sentinel = _nalloc.allocate(1);
+                _node   tmp(value_type(), _sentinel, _sentinel, _sentinel, BLACK);
+                tmp._color = BLACK;
+                _nalloc.construct(_sentinel, tmp);
+                _root = _sentinel;
+                
+                while (it != ite)
+                {
+                    insertNode(*it);
+                    ++it;
+                }
+            }
+
+
+            RBTree & operator=(const RBTree & rhs)
+            {
+                _destroy(_root);
+                
+                iterator it = rhs.getMin();
+                iterator ite = rhs._sentinel;
+                for (;it != ite; ++it)
+                    insertNode(*it);
+                return *this;
+            }            
+            
             ~RBTree()
             {
                 #ifdef __DEBUG__
@@ -168,6 +197,9 @@ namespace ft {
                 _nalloc.deallocate(_sentinel, 1);
                 _destroy(_root);
             }
+            
+            size_t  max_size    (void) const
+            {   return (_nalloc.max_size());}
             
             void    _destroy    (_node * node)
             {

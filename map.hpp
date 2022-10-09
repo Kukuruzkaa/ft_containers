@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 21:50:09 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/09 18:34:44 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,7 @@ namespace ft {
             }
             
             map(const map<Key,T,Compare,Allocator> & src)
-                :_val_comp(src._key_comp), _alloc(src._alloc), _key_comp(src._key_comp), _size(0)
-            {
-                this->insert(src.begin(), src.end());
-            }
+                :_val_comp(src._key_comp), _alloc(src._alloc), _key_comp(src._key_comp), _size(0), _tree(src._tree) {}
             
             ~map()
             {
@@ -95,7 +92,7 @@ namespace ft {
                 clear();
                 _alloc = rhs._alloc;
                 _key_comp = rhs._key_comp;
-                insert(rhs.begin(), rhs.end());
+                _tree = rhs._tree;
                 return *this;
             }
             
@@ -110,10 +107,7 @@ namespace ft {
             const_reverse_iterator rend() const {return const_reverse_iterator(begin());}
             
             // capacity:
-            bool empty() const
-            {
-                return _tree.getRoot() == _tree.getSentinel();
-            }
+            bool empty() const {return _tree.getRoot() == _tree.getSentinel();}
             
             size_type size() const {return(_size);}
             
@@ -128,9 +122,6 @@ namespace ft {
             // modifiers:
             pair<iterator, bool> insert(const value_type& new_pair)
             { 
-                // bool    b = _tree.insertNode(new_pair);
-                
-                // return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), b);
                 if (_tree.insertNode(new_pair))
                 {
                     ++_size;
@@ -146,8 +137,6 @@ namespace ft {
 
             iterator insert(iterator position, const value_type& new_pair)
             {
-                // (void) position;
-                // return (insert(new_pair).first);
                 _tree.insertNode(new_pair, position);
                 ++_size;
                 return (iterator(_tree.TreeSearch(new_pair)));
@@ -192,6 +181,35 @@ namespace ft {
                 }
             }
             
+// template < typename T >
+// void    swap    (T & lhs, T & rhs)
+// {
+//     T   tmp = lhs;
+//     lhs = rhs;
+//     rhs = tmp;
+// }
+            
+            void swap (map& other)
+            {
+                value_compare   val_comp = other._val_comp;
+                allocator_type  alloc = other._alloc;
+                key_compare     key_comp = other._key_comp;
+                size_t          size = other._size;
+                _Tree           tree = other._tree;           
+
+                other._val_comp = _val_comp;
+                other._alloc = _alloc;
+                other._key_comp = _key_comp;
+                other._size = _size;
+                other._tree = _tree;
+
+                _val_comp = val_comp;
+                _alloc = alloc;
+                _key_comp = key_comp;
+                _size = size;
+                _tree = tree;
+            }
+            
             void    test    (void) const
             {
                 _tree.test();
@@ -207,6 +225,8 @@ namespace ft {
             key_compare key_comp() const {return _key_comp;}
             
             value_compare value_comp() const {return _val_comp;}
+
+            allocator_type get_allocator() const {return _alloc;}
 
             // // map operations:
             iterator find(const key_type& key)
@@ -228,15 +248,73 @@ namespace ft {
                 return 0;
             }
             
-            // iterator lower_bound(const key_type& x);
-            // const_iterator lower_bound(const key_type& x) const;
-            // iterator upper_bound(const key_type& x);
-            // const_iterator upper_bound(const key_type& x) const;
+            iterator lower_bound(const key_type& key)
+            {
+                iterator it = begin();
+                iterator ite = end();
+
+                while (it != ite)
+                {
+                    if (!(_key_comp((*it).first, key)))
+                        return it;
+                    ++it;
+                }
+                return ite;          
+            }
             
-            // pair<iterator,iterator>
-            //     equal_range(const key_type& key);
-            // pair<const_iterator,const_iterator>
-            //     equal_range(const key_type& x) const3;
+            const_iterator lower_bound(const key_type& key) const
+            {
+                const_iterator cit = begin();
+                const_iterator cite = end();
+
+                while (cit != cite)
+                {
+                    if (!(_key_comp((*cit).first, key)))
+                        return cit;
+                    ++cit;
+                }
+                return cite;      
+            }
+            
+            iterator upper_bound(const key_type& key)
+            {
+                iterator it = begin();
+                iterator ite = end();
+
+                while (it != ite)
+                {
+                    if ((_key_comp(key, (*it).first)))
+                        return it;
+                    ++it;
+                }
+                return ite;  
+            }
+            
+            const_iterator upper_bound(const key_type& key) const
+            {
+                const_iterator cit = begin();
+                const_iterator cite = end();
+
+                while (cit != cite)
+                {
+                    if ((_key_comp(key, (*cit).first)))
+                        return cit;
+                    ++cit;
+                }
+                return cite; 
+            }
+            
+            pair<iterator,iterator>
+                equal_range(const key_type& key)
+            {
+                return pair<iterator, iterator>(iterator(lower_bound(key)), iterator(upper_bound(key)));
+            }
+            
+            pair<const_iterator,const_iterator>
+                equal_range(const key_type& key) const
+            {
+                return pair<const_iterator, const_iterator>(const_iterator(lower_bound(key)), const_iterator(upper_bound(key)));
+            }
 
             // template <class Key, class T, class Compare, class Allocator>
             //     bool operator==(const map<Key,T,Compare,Allocator>& x,
@@ -263,12 +341,12 @@ namespace ft {
             //     const map<Key,T,Compare,Allocator>& y);
                 
         private:
-            value_compare                                       _val_comp;
-            allocator_type                                      _alloc;
-            key_compare                                         _key_comp;
+            value_compare       _val_comp;
+            allocator_type      _alloc;
+            key_compare         _key_comp;
             
-            size_t                                              _size;
-            RBTree<value_type, key_compare, allocator_type>     _tree;
+            size_t               _size;
+            _Tree                _tree;
             
     };
         // specialized algorithms:
