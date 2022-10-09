@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/09 18:34:44 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/09 19:58:14 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include "reverse_iterator.hpp"
 #include "type_traits.hpp"
 #include "RBTree.hpp"
+#include "lexicographical_compare.hpp"
+#include "equal.hpp"
 // # define __DEBUG__
 
 namespace ft {
@@ -92,6 +94,7 @@ namespace ft {
                 clear();
                 _alloc = rhs._alloc;
                 _key_comp = rhs._key_comp;
+                _size = rhs._size;
                 _tree = rhs._tree;
                 return *this;
             }
@@ -195,19 +198,20 @@ namespace ft {
                 allocator_type  alloc = other._alloc;
                 key_compare     key_comp = other._key_comp;
                 size_t          size = other._size;
-                _Tree           tree = other._tree;           
+                // _Tree           tree = other._tree;           
 
                 other._val_comp = _val_comp;
                 other._alloc = _alloc;
                 other._key_comp = _key_comp;
                 other._size = _size;
-                other._tree = _tree;
+                // other._tree = _tree;
 
                 _val_comp = val_comp;
                 _alloc = alloc;
                 _key_comp = key_comp;
                 _size = size;
-                _tree = tree;
+                // _tree = tree;
+                _tree.swap(other._tree);
             }
             
             void    test    (void) const
@@ -316,29 +320,7 @@ namespace ft {
                 return pair<const_iterator, const_iterator>(const_iterator(lower_bound(key)), const_iterator(upper_bound(key)));
             }
 
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator==(const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
             
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator< (const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
-            
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator!=(const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
-                
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator> (const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
-                
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator>=(const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
-            
-            // template <class Key, class T, class Compare, class Allocator>
-            //     bool operator<=(const map<Key,T,Compare,Allocator>& x,
-            //     const map<Key,T,Compare,Allocator>& y);
                 
         private:
             value_compare       _val_comp;
@@ -350,7 +332,45 @@ namespace ft {
             
     };
         // specialized algorithms:
+    template <class _Key, class _T, class _Compare, class _Allocator>
+        void swap(map<_Key,_T,_Compare,_Allocator>& lhs, map<_Key,_T,_Compare,_Allocator>& rhs) {lhs.swap(rhs);}
+    
+    template <class _Key, class _T, class _Compare, class _Allocator>
+    bool operator==(const map<_Key,_T,_Compare,_Allocator>& lhs, const map<_Key,_T,_Compare,_Allocator>& rhs)
+    {
+        if (lhs.size() != rhs.size())
+            return false;
+        return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs._key_comp());
+    }
+    
+    template <class _Key, class _T, class _Compare, class _Allocator>
+    bool operator<(const map<_Key,_T,_Compare,_Allocator>& lhs, const map<_Key,_T,_Compare,_Allocator>& rhs)
+    {
+        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), lhs._key_comp());
+    }
+    
     template <class Key, class T, class Compare, class Allocator>
-        void swap(map<Key,T,Compare,Allocator>& lhs, map<Key,T,Compare,Allocator>& rhs) {lhs.swap(rhs);}
+    bool operator!=(const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs)
+    {
+        return (!(lhs == rhs));
+    }
+        
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator>(const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs)
+    {
+        return (!(lhs <= rhs));
+    }
+        
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator>=(const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs)
+    {
+       return (lhs > rhs || lhs == rhs);
+    }
+    
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator<=(const map<Key,T,Compare,Allocator>& lhs, const map<Key,T,Compare,Allocator>& rhs)
+    {
+        return (lhs < rhs || lhs == rhs);
+    }
 }
 #endif

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/09 18:24:34 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/09 18:59:39 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,18 @@ namespace ft {
                 for (;it != ite; ++it)
                     insertNode(*it);
                 return *this;
-            }            
+            }           
+
+            void    swap    (RBTree & rhs)
+            {
+                Node<T> *   tmp = _sentinel;
+                _sentinel = rhs._sentinel;
+                rhs._sentinel = tmp;
+
+                tmp = _root;
+                _root = rhs._root;
+                rhs._root = tmp;
+            } 
             
             ~RBTree()
             {
