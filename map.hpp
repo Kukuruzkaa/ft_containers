@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/09 19:58:14 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/10 21:48:33 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "RBTree.hpp"
 #include "lexicographical_compare.hpp"
 #include "equal.hpp"
+#include <functional>
 // # define __DEBUG__
 
 namespace ft {
@@ -79,7 +80,7 @@ namespace ft {
             }
             
             map(const map<Key,T,Compare,Allocator> & src)
-                :_val_comp(src._key_comp), _alloc(src._alloc), _key_comp(src._key_comp), _size(0), _tree(src._tree) {}
+                :_val_comp(src._key_comp), _alloc(src._alloc), _key_comp(src._key_comp), _size(src._size), _tree(src._tree) {}
             
             ~map()
             {
@@ -340,13 +341,13 @@ namespace ft {
     {
         if (lhs.size() != rhs.size())
             return false;
-        return ft::equal(lhs.begin(), lhs.end(), rhs.begin(), lhs._key_comp());
+        return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
     }
     
     template <class _Key, class _T, class _Compare, class _Allocator>
     bool operator<(const map<_Key,_T,_Compare,_Allocator>& lhs, const map<_Key,_T,_Compare,_Allocator>& rhs)
     {
-        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), lhs._key_comp());
+        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
     
     template <class Key, class T, class Compare, class Allocator>
