@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/09 18:59:39 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/12 19:34:49 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,15 +304,30 @@ namespace ft {
                 if (parent != _sentinel)
                 {
                     node = &parent;
-                    _node ** tmp_parent = &(*node)->_p;
-                    while (*tmp_parent != _sentinel &&
-                            (((*node)->_p->_left == *node && _key_comp((*tmp_parent)->_key.first, val.first)) ||
-                            ((*node)->_p->_right == *node && _key_comp(val.first, (*tmp_parent)->_key.first))))
+                    while (*node != _root &&
+                            (((*node)->_p->_left == *node && _key_comp((*node)->_p->_key.first, val.first)) ||
+                            ((*node)->_p->_right == *node && _key_comp(val.first, (*node)->_p->_key.first))))
                     {
-                        node = tmp_parent;
-                        tmp_parent = &(*node)->_p;
+                        node = &(*node)->_p;
                     }
+                    if (! _key_comp((*node)->_p->_key.first, val.first) && ! _key_comp(val.first, (*node)->_p->_key.first))
+                        return ((*node)->_p);
                 }
+                // _node **    node = &_root;
+                // if (parent != _sentinel)
+                // {
+                //     node = &parent;
+                //     _node ** tmp_parent = &(*node)->_p;
+                //     while (*tmp_parent != _sentinel &&
+                //             (((*node)->_p->_left == *node && _key_comp((*tmp_parent)->_key.first, val.first)) ||
+                //             ((*node)->_p->_right == *node && _key_comp(val.first, (*tmp_parent)->_key.first))))
+                //     {
+                //         node = tmp_parent;
+                //         tmp_parent = &(*node)->_p;
+                //     }
+                //     if (! _key_comp((*tmp_parent)->_key.first, val.first) && ! _key_comp(val.first, (*tmp_parent)->_key.first))
+                //         return ((*tmp_parent));
+                // }
                 while(*node != _sentinel)
                 {
                     parent = *node;
@@ -388,7 +403,7 @@ namespace ft {
 
             bool    insertNode(value_type z, _node * & node, _node * parent)
             {
-                if (node != _sentinel)
+                if (node != _sentinel)// || TreeSearch(z, tmp) != _sentinel)
                     return false;
                 _node   temp(z, parent, _sentinel, _sentinel, 1);
                 node = _nalloc.allocate(1);

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/08 21:59:40 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/12 21:34:44 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,21 @@ namespace ft {
             typedef ft::iterator<std::bidirectional_iterator_tag, typename Value::value_type>  _iterator;
         public:
             typedef map_iterator                                                iterator_type;
-            typedef Value                                                       value_type;
+            typedef typename _iterator::value_type                              value_type;
             typedef typename _iterator::difference_type                         difference_type;
             typedef typename _iterator::reference                               reference;
             typedef typename _iterator::pointer                                 pointer;
             typedef typename _iterator::iterator_category                       iterator_category;
-            typedef Node<value_type>                                            node_type;
+            typedef Value                                                       node_type;
             
 
         public:
         // protected:
-            value_type*  _node_ptr;
+            node_type*  _node_ptr;
             
         // public:
             map_iterator() : _node_ptr(NULL) {}
-            map_iterator(value_type * node) : _node_ptr(node) {}
+            map_iterator(node_type * node) : _node_ptr(node) {}
             map_iterator(const map_iterator & it) : _node_ptr(it._node_ptr) {}
             map_iterator & operator=(const map_iterator & rhs)
             {
@@ -94,8 +94,8 @@ namespace ft {
                 return _node_ptr != rhs._node_ptr;
             }
 
-            operator map_citerator<value_type> (void)
-            {   return (map_citerator<value_type>(_node_ptr));  }
+            operator map_citerator<node_type> (void)
+            {   return (map_citerator<node_type>(_node_ptr));  }
     };
 
     template<class const_Value>
@@ -105,20 +105,21 @@ namespace ft {
             typedef ft::iterator<std::bidirectional_iterator_tag, typename const_Value::value_type const>  _const_iterator;
         public:
             typedef map_citerator                                               iterator_type;
-            typedef const_Value                                                 value_type;
+            typedef typename _const_iterator::value_type                        value_type;
             typedef typename _const_iterator::difference_type                   difference_type;
             typedef typename _const_iterator::reference                         reference;
             typedef typename _const_iterator::pointer                           pointer;
             typedef typename _const_iterator::iterator_category                 iterator_category;
+            typedef const_Value                                                 node_type;
             
 
         protected:
-            value_type*  _node_ptr;
+            node_type *  _node_ptr;
             
         public:
             map_citerator() : _node_ptr(NULL) {}
-            map_citerator(value_type * node) : _node_ptr(node) {}
-            map_citerator(const map_iterator<value_type> & it) : _node_ptr(it._node_ptr) {}
+            map_citerator(node_type * node) : _node_ptr(node) {}
+            map_citerator(const map_iterator<node_type> & it) : _node_ptr(it._node_ptr) {}
             map_citerator(const map_citerator & cit) : _node_ptr(cit._node_ptr) {}
             map_citerator & operator=(const map_citerator & rhs)
             {

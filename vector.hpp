@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/22 18:02:43 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/12 21:28:35 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ namespace ft {
 			}
 			
 			size_type               size() const {return _size;}
-			size_type               max_size() const {return _alloc.max_size();}
+			size_type               max_size() const {return _valloc.max_size();}
 			
 			void                    reserve(size_type new_cap)
 			{
@@ -256,6 +256,11 @@ namespace ft {
 			
 			iterator                erase(iterator pos)
 			{
+				if (pos > end())
+				{
+					erase(end() - 1, end());
+					return (pos);
+				}
 				return erase(pos, pos + 1);
 			}
 				

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/18 15:34:38 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/01 22:07:16 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/12 21:28:14 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,6 @@ namespace ft {
     {
         return pair<T1, T2>(x, y);
     }
-
-    template
-    <
-        typename T1,
-        typename T2
-    >
-    std::ostream &    operator<<  (std::ostream & os,
-                                 ft::pair<T1, T2> const & data)
-    {
-        os  << "("
-            << data.first
-            << ":"
-            << data.second
-            << ")";
-        return (os);
-    }
-
-    
 }
 
-    
 #endif
