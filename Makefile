@@ -3,6 +3,7 @@ DEL_DIR				= rm -rf
 
 CC					= c++
 COMPILE_FLAG		= $(DEPS_FLAG) -std=c++98 -Wall -Werror -Wextra -g
+# FT_FLAG				= -DNAMESPACE=std
 FT_FLAG				= -DNAMESPACE=ft
 STD_FLAG			= 
 DEPS_FLAG			= -MMD -MP

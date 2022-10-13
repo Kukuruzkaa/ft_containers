@@ -273,27 +273,27 @@ typedef ft::vector<int>::const_reverse_iterator	vectcrit;
 
 int main ()
 {
-  ft::map<char, char> foo,bar;
+//   ft::map<char, char> foo,bar;
 
-	for (char c = 'a'; c != 'v'; ++c)
-	{
-		foo[c] = c;
-		bar[c + 1] = c + 1;
-	}
+// 	for (char c = 'a'; c != 'v'; ++c)
+// 	{
+// 		foo[c] = c;
+// 		bar[c + 1] = c + 1;
+// 	}
 
-	PRINT("foo");
-	foo.print();
-	PRINT("\n");
-	PRINT("bar");
-	bar.print();
+// 	PRINT("foo");
+// 	foo.print();
+// 	PRINT("\n");
+// 	PRINT("bar");
+// 	bar.print();
 
-	swap(foo, bar);
-	PRINT("\n\n");
-	PRINT("foo");
-	foo.print();
-	PRINT("\n");
-	PRINT("bar");
-	bar.print();
+// 	swap(foo, bar);
+// 	PRINT("\n\n");
+// 	PRINT("foo");
+// 	foo.print();
+// 	PRINT("\n");
+// 	PRINT("bar");
+// 	bar.print();
 
 //   foo['x']=100;
 //   foo['y']=200;
