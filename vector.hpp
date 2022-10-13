@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 23:36:52 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/12 21:28:35 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/13 16:33:28 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,13 +331,12 @@ namespace ft {
 			friend bool operator>=(const vector& lhs, const vector& rhs)
 			{
 				return (lhs > rhs || lhs == rhs);
-				// return (!(lhs < rhs));
 			}
 
 		private:
 			allocator_type  	_alloc;
 			_T_alloc			_valloc;
-			pointer             _arr; // Should be pointer ?
+			pointer             _arr; 
 			size_t         	 	_size;
 			size_t          	_capacity;
 

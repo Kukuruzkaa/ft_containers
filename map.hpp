@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/10 21:48:33 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/13 16:44:40 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,22 @@ namespace ft {
             
             size_type max_size() const {return _tree.max_size();}
 
+            T& at(const Key& key)
+            {
+                iterator    it = find(key);
+                if (find(key) == end())
+                    throw::std::out_of_range("ft::map::at");
+                return (find(key)->second);
+            }
+
+            const T& at( const Key& key ) const
+            {
+                iterator    it = find(key);
+                if (find(key) == end())
+                    throw::std::out_of_range("ft::map::at");
+                return (find(key)->second);
+            }
+
             // element access:
             T& operator[](const key_type& x)
             {
@@ -185,39 +201,23 @@ namespace ft {
                 }
             }
             
-// template < typename T >
-// void    swap    (T & lhs, T & rhs)
-// {
-//     T   tmp = lhs;
-//     lhs = rhs;
-//     rhs = tmp;
-// }
-            
             void swap (map& other)
             {
                 value_compare   val_comp = other._val_comp;
                 allocator_type  alloc = other._alloc;
                 key_compare     key_comp = other._key_comp;
-                size_t          size = other._size;
-                // _Tree           tree = other._tree;           
+                size_t          size = other._size;         
 
                 other._val_comp = _val_comp;
                 other._alloc = _alloc;
                 other._key_comp = _key_comp;
                 other._size = _size;
-                // other._tree = _tree;
 
                 _val_comp = val_comp;
                 _alloc = alloc;
                 _key_comp = key_comp;
                 _size = size;
-                // _tree = tree;
                 _tree.swap(other._tree);
-            }
-            
-            void    test    (void) const
-            {
-                _tree.test();
             }
             
             void clear()
@@ -329,9 +329,9 @@ namespace ft {
             key_compare         _key_comp;
             
             size_t               _size;
-            _Tree                _tree;
-            
+            _Tree                _tree;   
     };
+    
         // specialized algorithms:
     template <class _Key, class _T, class _Compare, class _Allocator>
         void swap(map<_Key,_T,_Compare,_Allocator>& lhs, map<_Key,_T,_Compare,_Allocator>& rhs) {lhs.swap(rhs);}
