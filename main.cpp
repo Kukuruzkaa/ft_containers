@@ -100,38 +100,6 @@ typedef ft::vector<int>::const_reverse_iterator	vectcrit;
 // 	// copy.print();
 
 
-// //   	ft::pair<map<char,int>::iterator,bool> ret;
-// //   	ret = mymap.insert ( pair<char,int>('z',500) );
-// //   	if (ret.second==false)
-// // 	{
-// //     	std::cout << "element 'z' already exists";
-// //     	std::cout << " with a value of " << ret.first->second << '\n';
-// //   	}
-
-// //   // second insert function version (with hint position):
-// //   	ft::map<char,int>::iterator it = mymap.begin();
-// // 	mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
-// //   	mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
-
-// //   // third insert function version (range insertion):
-// //   	ft::map<char,int> anothermap;
-// //   	anothermap.insert(mymap.begin(),mymap.find('c'));
-
-// //   // showing contents:
-// //   	std::cout << "mymap contains:\n";
-// //   	for (it=mymap.begin(); it!=mymap.end(); ++it)
-// //     	std::cout << it->first << " => " << it->second << '\n';
-
-// //   // cout  << "map size == "
-// //   //       << anothermap.size()
-// //   //       << std::endl;
-// //   	for (it = mymap.begin(); it != mymap.find('c'); ++it)
-// //       	std::cout  << "(" << it->first << ":" << it->second << ")" << std::endl;
-// //   	std::cout << "anothermap contains:\n";
-// // 	for (it=anothermap.begin(); it!=anothermap.end(); ++it)
-// //     	std::cout << it->first << " => " << it->second << '\n';
-
-// // 	mymap.print();
 
 // 	// while (it2 != bst.begin())
 // 	// {
@@ -202,6 +170,19 @@ typedef ft::vector<int>::const_reverse_iterator	vectcrit;
 	
 // 	// // (*it).second = 4;
 // 	// PRINT((*it).second);
+
+  
+
+// //   mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+// //   // print content:
+// //   for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+// //     std::cout << it->first << " => " << it->second << '\n';
+
+// //   return 0;
+// // }
+
+// // int main ()
 // 	// PRINT((*cit).first);
 // 	// PRINT((*ite).second);
 // 	// PRINT((*cite).first);
@@ -270,47 +251,3 @@ typedef ft::vector<int>::const_reverse_iterator	vectcrit;
 
 //   return 0;
 // }
-
-int main ()
-{
-//   ft::map<char, char> foo,bar;
-
-// 	for (char c = 'a'; c != 'v'; ++c)
-// 	{
-// 		foo[c] = c;
-// 		bar[c + 1] = c + 1;
-// 	}
-
-// 	PRINT("foo");
-// 	foo.print();
-// 	PRINT("\n");
-// 	PRINT("bar");
-// 	bar.print();
-
-// 	swap(foo, bar);
-// 	PRINT("\n\n");
-// 	PRINT("foo");
-// 	foo.print();
-// 	PRINT("\n");
-// 	PRINT("bar");
-// 	bar.print();
-
-//   foo['x']=100;
-//   foo['y']=200;
-
-//   bar['a']=11;
-//   bar['b']=22;
-//   bar['c']=33;
-
-//   foo.swap(bar);
-
-//   std::cout << "foo contains:\n";
-//   for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
-//     std::cout << it->first << " => " << it->second << '\n';
-
-//   std::cout << "bar contains:\n";
-//   for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
-//     std::cout << it->first << " => " << it->second << '\n';
-
-  return 0;
-}

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/13 16:44:40 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/16 13:57:56 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,11 +148,6 @@ namespace ft {
                     return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), true);   
                 }
                 return pair<iterator, bool>(iterator(_tree.TreeSearch(new_pair)), false);
-            }
-            
-            void    print   (void)
-            {
-                _tree.print();
             }
 
             iterator insert(iterator position, const value_type& new_pair)
