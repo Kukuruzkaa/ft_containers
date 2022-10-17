@@ -12,7 +12,7 @@ OBJS_DIR_FT			= ft_objs/
 OBJS_DIR_STD		= std_objs/
 
 DEFAULT_FILES		= operator structor member accessor
-SRCS				= $(addsuffix .cpp,		map_tests)
+SRCS				= $(addsuffix .cpp,		vector_tests)
 OBJS_FT				= $(patsubst %.cpp, $(OBJS_DIR_FT)%.o, $(SRCS))
 OBJS_STD			= $(patsubst %.cpp, $(OBJS_DIR_STD)%.o, $(SRCS))
 DEPS				= $(OBJS:.o=.d)
