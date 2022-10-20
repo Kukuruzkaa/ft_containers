@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 18:40:53 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/17 21:46:09 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/20 18:29:01 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,31 @@ int     main(void)
     std::cout << "******* FT::VECTOR::ELEMENT ACCESS *******" << std::endl;
     std::cout << std::endl;
     
+    std::cout << "access to the vector element via operator []: " << std::endl;
     NAMESPACE::vector<int> int_vec(10);
     for (size_t i = 0; i < int_vec.size(); i++)
         int_vec[i] = i;
     vec_print(int_vec);
+
+    PRINT(my_char_vector[0]);
+    std::cout << std::endl;
+    std::cout << "access to the vector element using AT: " << std::endl;
+    for (size_t i = 0; i < int_vec.size(); i++)
+        PRINT(myvector.at(i));
+    std::cout << std::endl;
+    
+    std::cout << "access to the vector element using FRONT: " << std::endl;
+    PRINT(foo.front());
+    std::cout << std::endl;
+    
+    std::cout << "access to the vector element using BACK: " << std::endl;
+    PRINT(bar.back());
+    PRINT(bar.back() - 1);
+    std::cout << std::endl;
+
+    std::cout << "******* FT::VECTOR::MODIFIERS *******" << std::endl;
+    std::cout << std::endl;
+
     
     return 0;
 }
