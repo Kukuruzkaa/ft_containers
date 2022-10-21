@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:33:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/13 16:46:57 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/21 22:39:03 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,46 @@ namespace ft {
                 return parent;
             }
 
+            Node const  * successor(void) const
+            {
+                Node const * parent = this->_p;
+                Node const * node = this;
+                
+                if (node == node->_left)
+                    return parent->TreeMax();
+
+                if (node->_right != node->_right->_right)
+                    return node->_right->TreeMin();
+                while (parent != parent->_left && node == parent->_right)
+                {
+                    node = parent;
+                    parent = parent->_p;
+                }
+                return parent;
+            }
+
             Node  *  predecessor(void)
             {
                 Node * parent = this->_p;
                 Node * node = this;
+                
+                if (node == node->_left)
+                    return parent->TreeMax();
+                    
+                if (node->_left != node->_left->_left)
+                    return node->_left->TreeMax();
+                while (parent != parent->_left && node == parent->_left)
+                {
+                    node = parent;
+                    parent = parent->_p;
+                }
+                return parent;
+            }
+
+            Node const *  predecessor(void) const
+            {
+                Node const * parent = this->_p;
+                Node const * node = this;
                 
                 if (node == node->_left)
                     return parent->TreeMax();
@@ -107,6 +143,19 @@ namespace ft {
             {
                 Node * parent = this;
                 Node * kid = parent->_right;
+                
+                while (kid != kid->_right)
+                {
+                    parent = kid;
+                    kid = kid->_right;
+                }
+                return parent;
+            }
+
+            Node const * TreeMax(void) const
+            {
+                Node const * parent = this;
+                Node const * kid = parent->_right;
                 
                 while (kid != kid->_right)
                 {
@@ -321,13 +370,13 @@ namespace ft {
                 return (*node);
             }
 
-            _node * const   TreeSearch(value_type val) const
+            _node const *   TreeSearch(value_type val) const
             {
                 _node * parent = _sentinel;
                 return (TreeSearch(val, parent));
             }
 
-            _node * const   TreeSearch(value_type val, _node * & parent) const
+            _node const *   TreeSearch(value_type val, _node * & parent) const
             {
                 _node * const *    node = &_root;
                 if (parent != _sentinel)

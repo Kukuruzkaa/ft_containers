@@ -1,253 +1,144 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::      ::::::::   */
-/*   tests_vector.cpp                                   :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/09/08 18:26:17 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/21 22:30:43 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "RBTree.hpp"
-#include "map.hpp"
-#include "vector.hpp"
+#include <string>
+#include <deque>
+#if 1 //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+#else
+	#include <map.hpp>
+	#include <stack.hpp>
+	#include <vector.hpp>
+#endif
 
-#define PRINT(a)	std::cout	<< #a << " == " << a << std::endl;
+#include <stdlib.h>
 
-using namespace ft;
-typedef ft::vector<int>::reverse_iterator	vectrit;
-typedef ft::vector<int>::const_reverse_iterator	vectcrit;
-// int main() 
-// {
-	// ft::vector<int>	v(10, 10);
-	// __attribute__ ((unused))vectrit	rit1 = v.rbegin();
-	// __attribute__ ((unused))vectrit	rit2;
-	// __attribute__ ((unused))vectcrit	rit3(rit1);
-	// __attribute__ ((unused))vectrit	rit4(rit2);
-	// // ft::map<char,int> first;
+#define MAX_RAM 4294967296
+#define BUFFER_SIZE 4096
+struct Buffer
+{
+	int idx;
+	char buff[BUFFER_SIZE];
+};
 
-	// first['a']=10;
-	// first['b']=30;
-	// first['c']=50;
-	// first['d']=70
 
-	// return (0);
+#define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-	// ft::map<int, int> bst;
-	// for (int i = 1; i < 10000000; ++i)
-	// {
-	// 	bst.insert(make_pair(i, i));
-	// }
+template < typename T1, typename T2 >
+std::ostream &	operator<<	(std::ostream & os, NAMESPACE::pair<T1, T2> const & p)
+{
+	os	<< "(" << p.first << ":" << p.second << ")";
+	return (os);
+}
 
-	// ft::map<int, int> bst;
-	// ft::map<int, int>::iterator	it = bst.begin(),
-	// 							it2 = it;
-	// // ft::map<int, int>::const_iterator cit = bst.begin();
-	// for (int i = 1; i < 10; ++i)
-	// {
-	// 	it = bst.insert(it, make_pair(i, i));
-	// 	// bst.print();
-	// }
-	// it = bst.begin();
-	// it2 = it;
-	// ++it;
-	// bst.print();
+template<typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+	{
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
 
-	// while (it != bst.end())
-	// {
-	// 	std::cout	<< *it
-	// 				<< std::endl;
-	// 	it2 = it;
-	// 	++it;
-	// }
-	// ft::map<int, int> bst2;
-	// bst2.insert(bst.begin(), bst.find(4));	
-	// bst2.print();
+	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-// 	ft::map<char, int, std::less<char>, std::allocator<char> > mymap;
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
-//   // first insert function version (single parameter):
+void    stackTest(void);
+void    vectorTest(void);
+void   	mapTest(void);
+
+int main(int argc, char** argv) 
+{
+	if (argc != 2)
+	{
+		std::cerr << "Usage: ./test seed" << std::endl;
+		std::cerr << "Provide a seed please" << std::endl;
+		std::cerr << "Count value:" << COUNT << std::endl;
+		return 1;
+	}
+	const int seed = atoi(argv[1]);
+	srand(seed);
+
+	ft::vector<std::string> vector_str;
+	ft::vector<int> vector_int;
+	ft::stack<int> stack_int;
+	ft::vector<Buffer> vector_buffer;
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::map<int, int> map_int;
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		vector_buffer.push_back(Buffer());
+	}
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		const int idx = rand() % COUNT;
+		vector_buffer[idx].idx = 5;
+	}
+	ft::vector<Buffer>().swap(vector_buffer);
+
+	try
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			const int idx = rand() % COUNT;
+			vector_buffer.at(idx);
+			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
+		}
+	}
+	catch(const std::exception& e)
+	{
+		//NORMAL ! :P
+	}
 	
-// 	for (char c = 'v'; c != 'a'; --c)
-// 	{
-// 		mymap.insert(make_pair(c, (int)(c - 'a')));
-// 	}
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
+	}
 
-// 	ft::map<char, int, std::less<char>, std::allocator<char> >::iterator	it = mymap.begin();
+	int sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
-//   	// mymap.insert ( pair<char,int>('a',100) );
-//   	// mymap.insert ( pair<char,int>('z',200) );
+	{
+		ft::map<int, int> copy = map_int;
+	}
+	MutantStack<char> iterable_stack;
+	for (char letter = 'a'; letter <= 'z'; letter++)
+		iterable_stack.push(letter);
+	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
+	{
+		std::cout << *it;
+	}
+	std::cout << std::endl;
 
-// 	// mymap.print();
-
-//   	// ft::map<char,int>::iterator it = mymap.begin();
-// 	// mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
-//   	// mymap.print();
-// 	// mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
-
-// 	mymap.print();
-// 	// std::cout << "***************************************" << std::endl;
-// 	// ft::map<char, int> copy(mymap);
-
-// 	// copy.print();
-
-// 	// ft::map<char, int>copy2;
-// 	// copy2 = copy;
-// 	// std::cout << "***************************************" << std::endl;
-// 	// copy.print();
-
-
-
-// 	// while (it2 != bst.begin())
-// 	// {
-// 	// 	std::cout	<< *it2
-// 	// 				<< std::endl;
-// 	// 	--it2;
-// 	// }
-
-// 	// it = bst2.find(1);
-// 	// PRINT(it->first);
-
-// 	// bst2.test();
-
-// 	// __attribute__((unused)) size_t	size = bst.count(17);
-// 	// PRINT(bst.find(4)->first);
-
-	
-
-// 	// bst2.erase(it);
-// 	// bst2.print();
-// 	// bst2.clear();
-// 	// bst2.print();
-
-	
-// 	// bst.insertNode(8);
-// 	// bst.insertNode(18);
-// 	// bst.insertNode(5);6
-// 	// bst.insertNode(15);
-// 	// bst.insertNode(17);
-// 	// bst.insertNode(25);
-// 	// bst.insertNode(40);
-// 	// bst.insertNode(80);
-// 	// bst.insertNode(90);
-// 	// bst.insertNode(101);
-// 	// bst.insertNode(3);
-// 	// bst.insertNode(0);
-// 	// bst.insertNode(74);
-// 	// bst.insertNode(1111);
-// 	// bst.insertNode(2147483647);
-// 	// bst.insertNode(-4);
-	
-// 	// // bst.treePrint();
-// 	// bst.print();
-// 	// std::cout << "avant delete" << std::endl;
-
-// 	// bst.deleteNode(80);
-// 	// bst.deleteNode(25);
-// 	// bst.deleteNode(8);
-// 	// bst.deleteNode(40);
-// 	// bst.deleteNode(15);
-// 	// bst.deleteNode(18);
-// 	// bst.deleteNode(5);
-// 	// bst.deleteNode(17);
-// 	// bst.deleteNode(17);
-// 	// bst.deleteNode(81);
-// 	// bst.print();
-
-// 	// map<int, int>::iterator	it = bst.begin();
-// 	// map<int, int>::const_iterator cit = bst.begin();
-// 	// map<int, int>::iterator ite = bst.end();
-// 	// map<int, int>::const_iterator cite = bst.end();
-
-// 	// map<int, int>::reverse_iterator	rit = bst.rbegin();
-// 	// map<int, int>::const_reverse_iterator rcit = bst.rbegin();
-// 	// map<int, int>::reverse_iterator rite = bst.rend();
-// 	// map<int, int>::const_reverse_iterator rcite = bst.rend();
-
-	
-// 	// // (*it).second = 4;
-// 	// PRINT((*it).second);
-
-  
-
-// //   mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-// //   // print content:
-// //   for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-// //     std::cout << it->first << " => " << it->second << '\n';
-
-// //   return 0;
-// // }
-
-// // int main ()
-// 	// PRINT((*cit).first);
-// 	// PRINT((*ite).second);
-// 	// PRINT((*cite).first);
-// 	// PRINT((*rit).second);
-// 	// PRINT((*rcit).first);
-// 	// PRINT((*rite).second);
-// 	// PRINT((*rcite).first);
-
-// 	// std::cout	<< __LINE__
-// 	// 			<< std::endl
-// 	// 			<< __FILE__
-// 	// 			<< std::endl
-// 	// 			<< __FUNCTION__
-// 	// 			<< std::endl;
-
-
-// 	return 0;
-// }
-
-
-// // int main ()
-// // {
-// //   ft::map<char,int> mymap;
-// // 	ft::map<char,int>::iterator itlow, itup;
-
-// //   mymap['a']=20;
-// //   mymap['b']=40;
-// //   mymap['c']=60;
-// //   mymap['d']=80;
-// //   mymap['e']=100;
-
-// //   itlow=mymap.lower_bound ('b');  // itlow points to b
-// //   itup=mymap.upper_bound ('d');   // itup points to e (not d!)
-// //   PRINT((*itlow).first);
-// //   PRINT((*itlow).second);
-// //   PRINT((*itup).first);
-// //   PRINT((*itup).second);
-
-  
-
-// //   mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-// //   // print content:
-// //   for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-// //     std::cout << it->first << " => " << it->second << '\n';
-
-// //   return 0;
-// // }
-
-// // int main ()
-// // {
-// //   ft::map<char,int> mymap;
-
-// //   mymap['a']=10;
-// //   mymap['b']=20;
-// //   mymap['c']=30;
-
-// //   ft::pair<ft::map<char,int>::const_iterator,ft::map<char,int>::const_iterator> ret;
-// //   ret = mymap.equal_range('b');
-
-// //   std::cout << "lower bound points to: ";
-// //   std::cout << ret.first->first << " => " << ret.first->second << '\n';
-
-// //   std::cout << "upper bound points to: ";
-//   std::cout << ret.second->first << " => " << ret.second->second << '\n';
-
-//   return 0;
-// }
+	stackTest();
+	vectorTest();
+	mapTest();
+	return (0);
+}

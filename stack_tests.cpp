@@ -6,7 +6,7 @@
 # define NAMESPACE ft
 #endif
 
-int main    (void)
+void    stackTest(void)
 {
     NAMESPACE::stack<int>  stack1;
     NAMESPACE::stack<int>  stack2;
@@ -63,5 +63,4 @@ int main    (void)
 
     std::cout << "------- ft::operator >= -------" << std::endl;
     std::cout << std::boolalpha << (stack1 >= stack2) << std::endl;
-
 }

@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 16:49:07 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/16 19:15:23 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/21 22:57:19 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 #define PRINT(a)	std::cout	<< #a << " == " << a << std::endl;
 
-int     main(void)
+void   mapTest(void)
 {
     std::cout << std::endl;
     std::cout << "******* FT::MAP::CONSTRUCTORS::ITERATORS*******" << std::endl;
@@ -272,7 +272,7 @@ int     main(void)
     std::cout << std::endl;
 
     std::cout << "-- LOWER AN UPPER BOUNDS functions -- : " << std::endl;
-    
+ 
     NAMESPACE::map<char,int>::iterator itlow,itup;
     itlow = mymap.lower_bound ('b'); 
     itup = mymap.upper_bound ('c');   
@@ -280,6 +280,7 @@ int     main(void)
     PRINT((*itlow).second);
     PRINT((*itup).first);
     PRINT((*itup).second);
+    std::cout << std::endl;
 
     std::cout << "-- EQUAL_RANGE -- : " << std::endl;
     
@@ -291,12 +292,11 @@ int     main(void)
 
     std::cout << "upper bound points to: ";
     std::cout << eq_ret.second->first << " => " << eq_ret.second->second << std::endl;
+    std::cout << std::endl;
 
     std::cout << "-- COUNT -- : " << std::endl;
     PRINT(mymap.count('a'));
     PRINT(mymap.count('m'));
-    
-    return 0;
 }
 
 

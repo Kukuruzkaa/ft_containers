@@ -6,3 +6,7 @@ container_tester
 containers_test
 ft_containers
 std_containers
+.test.sh.swp
+ft_res
+res_ft
+std_res

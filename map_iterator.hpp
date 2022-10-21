@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 18:30:02 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/12 21:34:44 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/21 22:36:43 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,11 @@ namespace ft {
             
 
         protected:
-            node_type *  _node_ptr;
+            node_type const *  _node_ptr;
             
         public:
             map_citerator() : _node_ptr(NULL) {}
-            map_citerator(node_type * node) : _node_ptr(node) {}
+            map_citerator(node_type const * node) : _node_ptr(node) {}
             map_citerator(const map_iterator<node_type> & it) : _node_ptr(it._node_ptr) {}
             map_citerator(const map_citerator & cit) : _node_ptr(cit._node_ptr) {}
             map_citerator & operator=(const map_citerator & rhs)
