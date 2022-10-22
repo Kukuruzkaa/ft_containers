@@ -6,19 +6,21 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 14:31:34 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/21 22:30:43 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/22 15:53:27 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
+#ifdef NAMESPACE //CREATE A REAL STL EXAMPLE
 	#include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
+	#define FT
+	#define NAMESPACE ft
 	#include <map.hpp>
 	#include <stack.hpp>
 	#include <vector.hpp>
@@ -140,5 +142,20 @@ int main(int argc, char** argv)
 	stackTest();
 	vectorTest();
 	mapTest();
+
+// #ifdef FT
+
+// 	NAMESPACE::map<int, int>	_m;
+
+// 	for (int i = 0; i < 9; ++i)
+// 	{
+// 		_m.test();
+// 		_m[i] = -1 - i;
+// 		_m.test();
+// 		_m[-1 - i] = i;
+// 	}
+// 	_m.test();
+
+// #endif
 	return (0);
 }

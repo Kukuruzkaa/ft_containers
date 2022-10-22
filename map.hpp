@@ -6,7 +6,7 @@
 /*   By: ddiakova <ddiakova@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/10 17:01:18 by ddiakova          #+#    #+#             */
-/*   Updated: 2022/10/16 13:57:56 by ddiakova         ###   ########.fr       */
+/*   Updated: 2022/10/22 15:53:57 by ddiakova         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,8 +316,11 @@ namespace ft {
                 return pair<const_iterator, const_iterator>(const_iterator(lower_bound(key)), const_iterator(upper_bound(key)));
             }
 
-            
-                
+            // void    test    (void)
+            // {
+            //     _tree.test();
+            // }
+  
         private:
             value_compare       _val_comp;
             allocator_type      _alloc;
